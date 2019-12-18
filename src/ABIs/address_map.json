@@ -1,0 +1,16 @@
+{
+  "main": {
+    "address_USDx": "0xeb269732ab75A6fD61Ea60b06fE994cD32a83549",
+    "address_WETH": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "address_USDT": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    "address_mMarket": "0x0eEe3E3828A45f7601D5F54bF49bB01d1A9dF5ea",
+    "address_liquidator": "0x932906251479106d96904184aa4985c1a291b35d"
+  },
+  "rinkeby": {
+    "address_USDx": "0xaf21bb8ae7b7a5eec37964e478583cd486fd12e2",
+    "address_WETH": "0xC8b1a5ef2e19937dd6c0f804DF2e3efE9F093B1e",
+    "address_USDT": "0xA1e525F7d24D7cCB78A070BBd12C0BF21Fb4a848",
+    "address_mMarket": "0x2FD380b99E0c6ff16F569FB8214b40509F776764",
+    "address_liquidator": "0x8e8627fc8e2359fdc9492540d646c3f4d979a44a"
+  }
+}
