@@ -120,18 +120,33 @@ export default class Home extends React.Component {
         })
     }
 
-    i_want_send_token = (token) => {
-        // console.log(token);
-        // console.log(this.state.choosen_item);
-        this.state.choosen_item.borrow.map(borrow_item => {
-            if (borrow_item.symbol === token) {
-                this.setState({
-                    i_want_send: token,
-                    i_want_send_address: borrow_item.asset,
-                    now_new_decimals: borrow_item.decimal
+    i_want_send_token = (item) => {
+        this.setState({
+            max_liquidate_amount: '',
+            max_liquidate_amount_show: '',
+            i_want_send: item.symbol,
+            i_want_send_address: item.asset,
+            now_new_decimals: item.decimal
+        }, () => {
+            console.log(this.state.choosen_item);
+
+            var targetAccount = this.state.data[this.state.index].address;
+            var assetBorrow = this.state.i_want_send_address;
+            var assetCollateral = this.state.i_want_received_address;
+            var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+
+            // console.log(get_max_api)
+            fetch(get_max_api)
+                .then((res) => { return res.text() })
+                .then((data) => {
+                    data = JSON.parse(data);
+                    console.log(data.maxClose.amountRaw)
+                    this.setState({
+                        max_liquidate_amount: data.maxClose.amountRaw,
+                        max_liquidate_amount_show: data.maxClose.amount
+                    })
                 })
-            }
-        })
+        });
     }
 
 
@@ -356,7 +371,7 @@ export default class Home extends React.Component {
                                                 return (
                                                     <tr
                                                         key={borrow_item.asset}
-                                                        onClick={() => { this.i_want_send_token(borrow_item.symbol) }}
+                                                        onClick={() => { this.i_want_send_token(borrow_item) }}
                                                         className={borrow_item.symbol === this.state.i_want_send ? 'active' : ''}
                                                     >
                                                         <td>{borrow_item.symbol}</td>
