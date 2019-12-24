@@ -314,7 +314,6 @@ export const click_liquidate = (that) => {
         return false;
     }
 
-
     var tar_address = that.state.data[that.state.index].address; // 要清算的目标账户
     var tar_amount_to_liquidate = that.state.amount_to_liquidate; // 请求清算的数量
     // var tar_borrow = address_map[that.state.net_type][that.state.i_want_send];
@@ -335,9 +334,9 @@ export const click_liquidate = (that) => {
             var temp_value = tar_amount_to_liquidate;
             var t_num = temp_value.split('.')[1].length;
             temp_value = temp_value.substr(0, temp_value.indexOf('.')) + temp_value.substr(temp_value.indexOf('.') + 1);
-            last_argus = that.bn(temp_value).mul(that.bn(10 ** (that.state.decimals[that.state.i_want_send] - t_num))).toString();
+            last_argus = that.bn(temp_value).mul(that.bn(10 ** (that.state.now_new_decimals - t_num))).toString();
         } else {
-            last_argus = that.bn(tar_amount_to_liquidate).mul(that.bn(10 ** that.state.decimals[that.state.i_want_send]))
+            last_argus = that.bn(tar_amount_to_liquidate).mul(that.bn(10 ** that.state.now_new_decimals))
         }
     }
 
@@ -388,24 +387,6 @@ export const click_max = (that) => {
     var t_balance = that.state.max_liquidate_amount;
     var to_show;
 
-    console.log(that.state.i_want_send);//now_new_decimals 
-    console.log(that.state.now_new_decimals);
-
-    // if (that.state.i_want_send === 'USDx' || that.state.i_want_send === 'WETH') {
-    //     console.log(t_balance);
-    //     if (t_balance.length <= 18) {
-    //         to_show = ('0.' + ('000000000000000000' + t_balance).substr(-18)).substring(0, 18);
-    //     } else {
-    //         to_show = (that.bn(t_balance).div(that.bn(10 ** 18)) + '.' + t_balance.substr(-18)).substring(0, 18);
-    //     }
-    // } else if (that.state.i_want_send === 'USDT') {
-    //     console.log(t_balance);
-    //     if (t_balance.length <= 6) {
-    //         to_show = ('0.' + ('000000000000000000' + t_balance).substr(-6)).substring(0, 6);
-    //     } else {
-    //         to_show = (that.bn(t_balance).div(that.bn(10 ** 6)) + '.' + t_balance.substr(-6)).substring(0, 18);
-    //     }
-    // }
     if (t_balance.length <= that.state.now_new_decimals) {
         to_show = ('0.' + ('000000000000000000' + t_balance).substr(-that.state.now_new_decimals)).substring(0);
     } else {
