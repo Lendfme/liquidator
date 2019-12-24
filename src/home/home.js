@@ -174,7 +174,7 @@ export default class Home extends React.Component {
                                                     className={this.state.index === item.key ? 'active' : ''}
                                                 >
                                                     <td className='td-1'>{format_Shortfall(item.shortfallWeth)}</td>
-                                                    <td className='td-2'>{item.address.slice(0, 4) + '...' + item.address.slice(-4)}</td>
+                                                    <td className='td-2'>{item.address.slice(0, 6) + '...' + item.address.slice(-4)}</td>
                                                     <td className='td-3'>{item.Supply}</td>
                                                     <td className='td-4'>{item.Borrow}</td>
                                                     <td className='td-5'>{item.collateralRate}</td>
@@ -276,7 +276,7 @@ export default class Home extends React.Component {
                             <div className='account'>
                                 <span className='account-title'>Account:</span>
                                 <span className='account-address'>
-                                    {this.state.data[this.state.index].Account}
+                                    {this.state.data[this.state.index].address}
                                 </span>
                             </div>
                             <div className='supply-table'>
