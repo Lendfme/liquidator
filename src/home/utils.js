@@ -242,6 +242,8 @@ export const input_chang = (that, value) => {
         return false;
     }
 
+    that.setState({ i_will_liquidate_max: false });
+
     if (value === null || value === '') {
         console.log("value === null || value === ''")
         that.setState({
@@ -252,8 +254,8 @@ export const input_chang = (that, value) => {
     }
 
     if (value.indexOf('.') > 0) {
-        // console.log("value.indexOf('.') > 0")
-        if (value.split('.')[1].length > that.state.decimals[that.state.i_want_send]) {
+        // console.log("value.indexOf('.') > 0")   
+        if (value.split('.')[1].length > that.state.now_new_decimals) {
             that.setState({
                 is_btn_enable: false,
                 amount_to_liquidate: value,
@@ -265,7 +267,7 @@ export const input_chang = (that, value) => {
         var temp_value = value;
         var t_num = value.split('.')[1].length;
         temp_value = temp_value.substr(0, temp_value.indexOf('.')) + temp_value.substr(value.indexOf('.') + 1); // '123456'
-        amount_bn = that.bn(temp_value).mul(that.bn(10 ** (that.state.decimals[that.state.i_want_send] - t_num))); // bn_'123456'
+        amount_bn = that.bn(temp_value).mul(that.bn(10 ** (that.state.now_new_decimals - t_num))); // bn_'123456'
 
         console.log(amount_bn.toString())
 
@@ -277,7 +279,7 @@ export const input_chang = (that, value) => {
             return false;
         }
     } else {
-        if (that.bn(value).mul(that.bn(10 ** that.state.decimals[that.state.i_want_send])).gt(that.bn(that.state.max_liquidate_amount))) {
+        if (that.bn(value).mul(that.bn(10 ** that.state.now_new_decimals)).gt(that.bn(that.state.max_liquidate_amount))) {
             that.setState({
                 is_btn_enable: false,
                 amount_to_liquidate: value,
@@ -405,9 +407,9 @@ export const click_max = (that) => {
     //     }
     // }
     if (t_balance.length <= that.state.now_new_decimals) {
-        to_show = ('0.' + ('000000000000000000' + t_balance).substr(-that.state.now_new_decimals)).substring(0, that.state.now_new_decimals);
+        to_show = ('0.' + ('000000000000000000' + t_balance).substr(-that.state.now_new_decimals)).substring(0);
     } else {
-        to_show = (that.bn(t_balance).div(that.bn(10 ** that.state.now_new_decimals)) + '.' + t_balance.substr(-that.state.now_new_decimals)).substring(0, that.state.now_new_decimals);
+        to_show = (that.bn(t_balance).div(that.bn(10 ** that.state.now_new_decimals)) + '.' + t_balance.substr(-that.state.now_new_decimals)).substring(0);
     }
 
     that.setState({
