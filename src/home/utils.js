@@ -336,7 +336,7 @@ export const click_liquidate = (that) => {
             temp_value = temp_value.substr(0, temp_value.indexOf('.')) + temp_value.substr(temp_value.indexOf('.') + 1);
             last_argus = that.bn(temp_value).mul(that.bn(10 ** (that.state.now_new_decimals - t_num))).toString();
         } else {
-            last_argus = that.bn(tar_amount_to_liquidate).mul(that.bn(10 ** that.state.now_new_decimals))
+            last_argus = that.bn(tar_amount_to_liquidate).mul(that.bn(10 ** that.state.now_new_decimals)).toString();
         }
     }
 
