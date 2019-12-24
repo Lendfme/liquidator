@@ -108,13 +108,30 @@ export default class Home extends React.Component {
 
 
     i_want_received_token = (token) => {
-        console.log(token);
-        this.setState({ i_want_received: token })
+        // console.log(token);
+        // this.setState({ i_want_received: token })
+        this.state.choosen_item.supply.map(supply_item => {
+            if (supply_item.symbol === token) {
+                this.setState({
+                    i_want_received: token,
+                    i_want_received_address: supply_item.asset
+                })
+            }
+        })
     }
 
     i_want_send_token = (token) => {
-        console.log(token);
-        this.setState({ i_want_send: token })
+        // console.log(token);
+        // console.log(this.state.choosen_item);
+        this.state.choosen_item.borrow.map(borrow_item => {
+            if (borrow_item.symbol === token) {
+                this.setState({
+                    i_want_send: token,
+                    i_want_send_address: borrow_item.asset,
+                    now_new_decimals: borrow_item.decimal
+                })
+            }
+        })
     }
 
 
@@ -126,6 +143,21 @@ export default class Home extends React.Component {
     }
 
 
+    click_connect = () => {
+        this.new_web3.givenProvider.enable().then(res_accounts => {
+            this.setState({ my_account: res_accounts[0] }, () => {
+                get_balance(this);
+                get_allowance(this, address[this.state.net_type]['liquidator']);
+
+                this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
+                    console.log('res_usdx_price:', res_usdx_price);
+                    this.setState({ usdx_price: res_usdx_price }, () => {
+                        get_list_data(this, 1);
+                    })
+                })
+            })
+        })
+    }
 
 
     render() {
@@ -230,7 +262,7 @@ export default class Home extends React.Component {
                                         <td>
                                             {'$'}
                                             {
-                                                !this.state.weth_approved && 
+                                                !this.state.weth_approved &&
                                                 <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WETH, address[this.state.net_type]['liquidator'], 'weth') }} />
                                             }
                                         </td>
@@ -246,7 +278,7 @@ export default class Home extends React.Component {
                                         <td>
                                             {'$'}
                                             {
-                                                !this.state.usdx_approved && 
+                                                !this.state.usdx_approved &&
                                                 <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDx, address[this.state.net_type]['liquidator'], 'usdx') }} />
                                             }
                                         </td>
@@ -262,7 +294,7 @@ export default class Home extends React.Component {
                                         <td>
                                             {'$'}
                                             {
-                                                !this.state.usdt_approved && 
+                                                !this.state.usdt_approved &&
                                                 <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDT, address[this.state.net_type]['liquidator'], 'usdt') }} />
                                             }
                                         </td>
