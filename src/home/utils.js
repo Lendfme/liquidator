@@ -1,22 +1,23 @@
-export const get_usdx_balance = (that) => {
+let address_map = require('../ABIs/address_map.json');
+
+
+export const get_balance = (that) => {
     that.state.USDx.methods.balanceOf(that.state.my_account).call((err, res_usdx_balance) => {
-        // console.log('my_usdx_balance: ', this.format_bn(res_usdx_balance, 18, 2));
         that.setState({ my_usdx_balance: res_usdx_balance });
     })
-}
-
-export const get_weth_balance = (that) => {
     that.state.WETH.methods.balanceOf(that.state.my_account).call((err, res_weth_balance) => {
-        // console.log('res_weth_balance: ', this.format_bn(res_weth_balance, 18, 2));
         that.setState({ my_weth_balance: res_weth_balance });
     })
+    that.state.USDT.methods.balanceOf(that.state.my_account).call((err, res_usdt_balance) => {
+        that.setState({ my_usdt_balance: res_usdt_balance });
+    })
+    that.new_web3.eth.getBalance(that.state.my_account, (err, res_eth_balance) => {
+        that.setState({ my_eth_balance: res_eth_balance });
+    });
 }
 
 
-// ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 ***** ***** 分割线 ***** 
-
-
-export const get_usdx_allowance = (that, address_liquidator) => {
+export const get_allowance = (that, address_liquidator) => {
     that.state.USDx.methods.allowance(that.state.my_account, address_liquidator).call((err, res_usdx_allowance) => {
         if (that.bn(res_usdx_allowance).gt(that.bn('0'))) {
             // console.log('res_allowance: yyy ', res_allowance);
@@ -26,10 +27,25 @@ export const get_usdx_allowance = (that, address_liquidator) => {
             that.setState({ usdx_approved: false });
         }
     });
+    that.state.WETH.methods.allowance(that.state.my_account, address_liquidator).call((err, res_weth_allowance) => {
+        if (that.bn(res_weth_allowance).gt(that.bn('0'))) {
+            // console.log('res_allowance: yyy ', res_allowance);
+            that.setState({ weth_approved: true });
+        } else {
+            // console.log('res_allowance: nnn ', res_allowance);
+            that.setState({ weth_approved: false });
+        }
+    });
+    that.state.USDT.methods.allowance(that.state.my_account, address_liquidator).call((err, res_usdt_allowance) => {
+        if (that.bn(res_usdt_allowance).gt(that.bn('0'))) {
+            // console.log('res_allowance: yyy ', res_allowance);
+            that.setState({ usdt_approved: true });
+        } else {
+            // console.log('res_allowance: nnn ', res_allowance);
+            that.setState({ usdt_approved: false });
+        }
+    });
 }
-
-
-// ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 ***** ***** 分割线 ***** 
 
 
 export const get_list_data = (that, num) => {
@@ -67,6 +83,7 @@ export const get_list_data = (that, num) => {
         })
 }
 
+
 export const get_markets = () => {
     let markets_api = 'https://api.lendf.me/v1/info?data=markets';
 
@@ -78,9 +95,6 @@ export const get_markets = () => {
             this.setState({ markets: data })
         })
 }
-
-
-// ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 *****  ***** 分割线 ***** ***** 分割线 ***** 
 
 
 export const handle_list_click = (that, key) => {
@@ -118,36 +132,63 @@ export const handle_list_click = (that, key) => {
     })
 }
 
-//address[this.state.net_type]['address_liquidator']
-export const handle_approve_usdx = (that, token_contract, address_liquidator) => {
-    token_contract.methods.approve(address_liquidator, -1).send(
-        {
-            from: that.state.my_account
-        }, (reject, res_hash) => {
-            if (res_hash) {
-                console.log(res_hash);
 
-                let check_approve = setInterval(() => {
-                    that.new_web3.eth.getTransactionReceipt(res_hash, (res_fail, res_success) => {
-                        if (res_success) {
-                            clearInterval(check_approve);
-                            if (res_success.status === true) {
-                                that.setState({ usdx_approved: true })
-                            }
+export const handle_approve = (that, token_contract, address_liquidator, token) => {
+    token_contract.methods.approve(address_liquidator, -1).estimateGas(
+        { from: that.state.my_account }, (err, gasLimit) => {
+            that.new_web3.eth.getGasPrice((err, gasPrice) => {
+                console.log('supply_gasLimit: ', gasLimit);
+                console.log('supply_gasPrice: ', gasPrice);
+                token_contract.methods.approve(address_liquidator, -1).send(
+                    {
+                        from: that.state.my_account,
+                        gas: Math.ceil(gasLimit * 1.3),
+                        gasPrice: gasPrice
+                    }, (reject, res_hash) => {
+                        if (res_hash) {
+                            console.log(res_hash);
+                            let check_approve = setInterval(() => {
+                                console.log('check approve ', token);
+                                that.new_web3.eth.getTransactionReceipt(res_hash, (res_fail, res_success) => {
+                                    if (res_success) {
+                                        clearInterval(check_approve);
+                                        if (res_success.status === true) {
+                                            if (token === 'weth') {
+                                                that.setState({ weth_approved: true })
+                                            } else if (token === 'usdx') {
+                                                that.setState({ usdx_approved: true })
+                                            } else if (token === 'usdt') {
+                                                that.setState({ usdt_approved: true })
+                                            }
+                                        }
+                                    }
+                                    if (res_fail) {
+                                        console.log(res_fail);
+                                        clearInterval(check_approve);
+                                        if (token === 'weth') {
+                                            that.setState({ weth_approved: false })
+                                        } else if (token === 'usdx') {
+                                            that.setState({ usdx_approved: false })
+                                        } else if (token === 'usdt') {
+                                            that.setState({ usdt_approved: false })
+                                        }
+                                    }
+                                })
+                            }, 2000)
                         }
-                        if (res_fail) {
-                            console.log(res_fail);
-                            clearInterval(check_approve);
-                            that.setState({ usdx_approved: false })
+                        if (reject) {
+                            console.log(reject)
                         }
-                    })
-                }, 2000)
-            }
-            if (reject) {
-                console.log(reject)
-            }
+                    }
+                )
+            })
         }
     )
+
+
+
+
+
 }
 
 
@@ -253,10 +294,113 @@ export const input_chang = (that, value) => {
     that.setState({
         amount_to_liquidate: value,
         i_will_liquidate_max: false,
-        amount_to_liquidate_bn: '',
         is_btn_enable: true,
     })
 
 
 }
+
+
+export const click_liquidate = (that) => {
+    if (!that.state.data_is_ok || !that.state.is_btn_enable || !that.state.amount_to_liquidate) {
+        console.log('i return you.')
+        return false;
+    }
+
+
+    var tar_address = that.state.data[that.state.index].address; // 要清算的目标账户
+    var tar_amount_to_liquidate = that.state.amount_to_liquidate; // 请求清算的数量
+    var tar_borrow = address_map[that.state.net_type][that.state.i_want_send];
+    var tar_supply = address_map[that.state.net_type][that.state.i_want_received];
+
+    console.log('要清算的目标账户: ', tar_address)
+    console.log('请求清算的数量 :', tar_amount_to_liquidate)
+    console.log('目标账户 borrow: ', tar_borrow)
+    console.log('目标账户 supply: ', tar_supply)
+
+    var last_argus;
+    if (that.state.i_will_liquidate_max) {
+        last_argus = that.state.max_liquidate_amount;
+    } else {
+        if (tar_amount_to_liquidate.indexOf('.') > 0) {
+            var temp_value = tar_amount_to_liquidate;
+            var t_num = temp_value.split('.')[1].length;
+            temp_value = temp_value.substr(0, temp_value.indexOf('.')) + temp_value.substr(temp_value.indexOf('.') + 1);
+            last_argus = that.bn(temp_value).mul(that.bn(10 ** (that.state.decimals[that.state.i_want_send] - t_num))).toString();
+        } else {
+            last_argus = that.bn(tar_amount_to_liquidate).mul(that.bn(10 ** that.state.decimals[that.state.i_want_send]))
+        }
+    }
+
+    console.log('last_argus: ', last_argus);
+
+    that.state.Liquidate.methods.liquidateBorrow(tar_address, tar_borrow, tar_supply, last_argus).estimateGas(
+        { from: that.state.my_account }, (err, gasLimit) => {
+            that.new_web3.eth.getGasPrice((err, gasPrice) => {
+                console.log('supply_gasLimit: ', gasLimit);
+                console.log('supply_gasPrice: ', gasPrice);
+                that.state.Liquidate.methods.liquidateBorrow(tar_address, tar_borrow, tar_supply, last_argus).send(
+                    {
+                        from: that.state.my_account,
+                        gas: Math.ceil(gasLimit * 1.3),
+                        gasPrice: gasPrice
+                    }, (reject, res_hash) => {
+                        if (res_hash) {
+                            console.log(res_hash);
+                            let check_Liquidate = setInterval(() => {
+                                console.log('check liquidateBorrow ');
+                                that.new_web3.eth.getTransactionReceipt(res_hash, (res_fail, res_success) => {
+                                    if (res_success) {
+                                        clearInterval(check_Liquidate);
+                                        if (res_success.status === true) {
+                                            that.setState({
+                                                amount_to_liquidate: ''
+                                            })
+                                        }
+                                    }
+                                    if (res_fail) {
+                                        console.log(res_fail);
+                                        clearInterval(check_Liquidate);
+                                    }
+                                })
+                            }, 2000)
+                        }
+                        if (reject) {
+                            console.log(reject)
+                        }
+                    }
+                )
+            })
+        })
+}
+
+
+export const click_max = (that) => {
+    var t_balance = that.state.max_liquidate_amount;
+    var to_show;
+
+    console.log(that.state.i_want_send);
+
+    if (that.state.i_want_send === 'USDx' || that.state.i_want_send === 'WETH') {
+        console.log(t_balance);
+        if (t_balance.length <= 18) {
+            to_show = ('0.' + ('000000000000000000' + t_balance).substr(-18)).substring(0, 18);
+        } else {
+            to_show = (that.bn(t_balance).div(that.bn(10 ** 18)) + '.' + t_balance.substr(-18)).substring(0, 18);
+        }
+    } else if (that.state.i_want_send === 'USDT') {
+        console.log(t_balance);
+        if (t_balance.length <= 6) {
+            to_show = ('0.' + ('000000000000000000' + t_balance).substr(-6)).substring(0, 6);
+        } else {
+            to_show = (that.bn(t_balance).div(that.bn(10 ** 6)) + '.' + t_balance.substr(-6)).substring(0, 18);
+        }
+    }
+
+    that.setState({
+        amount_to_liquidate: to_show,
+        i_will_liquidate_max: true
+    })
+}
+
 

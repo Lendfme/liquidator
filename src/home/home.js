@@ -6,13 +6,16 @@ import { Button } from 'antd';
 import { Pagination } from 'antd';
 
 import {
-    get_usdx_balance,
-    get_weth_balance,
-    get_usdx_allowance,
+    get_balance,
+    get_allowance,
     get_list_data,
     format_Shortfall,
     handle_list_click,
-    input_chang
+    input_chang,
+    click_liquidate,
+    click_max,
+    format_bn,
+    handle_approve
 } from './utils';
 
 import logo from '../images/logo.svg';
@@ -24,10 +27,10 @@ import lock from '../images/lock.svg';
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
 let USDx_abi = require('../ABIs/USDX_ABI.json');
+let USDT_abi = require('../ABIs/USDT_ABI.json');
 let Liquidate_ABI = require('../ABIs/Liquidate_ABI.json');
 
 let address = require('../ABIs/address_map.json');
-let tokens_map = require('../ABIs/tokens_map.json');
 
 
 
@@ -59,7 +62,7 @@ export default class Home extends React.Component {
             },
             amount_to_liquidate: '',
             data_is_ok: false,
-            is_btn_enable:true
+            is_btn_enable: true
         }
 
         this.new_web3 = window.new_web3 = new Web3(Web3.givenProvider || null);
@@ -70,6 +73,7 @@ export default class Home extends React.Component {
                 let mMarket = new this.new_web3.eth.Contract(mMarket_abi, address[net_type]['mMarket']);
                 let WETH = new this.new_web3.eth.Contract(WETH_abi, address[net_type]['WETH']);
                 let USDx = new this.new_web3.eth.Contract(USDx_abi, address[net_type]['USDx']);
+                let USDT = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['USDT']);
                 let Liquidate = new this.new_web3.eth.Contract(Liquidate_ABI, address[net_type]['liquidator']);
 
                 this.new_web3.givenProvider.enable().then(res_accounts => {
@@ -78,13 +82,13 @@ export default class Home extends React.Component {
                         mMarket: mMarket,
                         WETH: WETH,
                         USDx: USDx,
+                        USDT: USDT,
                         Liquidate: Liquidate,
                         my_account: res_accounts[0]
                     }, () => {
-                        get_usdx_balance(this);
-                        get_weth_balance(this);
+                        get_balance(this);
 
-                        get_usdx_allowance(this, address[this.state.net_type]['liquidator']);
+                        get_allowance(this, address[this.state.net_type]['liquidator']);
 
                         this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
                             console.log('res_usdx_price:', res_usdx_price);
@@ -103,20 +107,6 @@ export default class Home extends React.Component {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     i_want_received_token = (token) => {
         console.log(token);
         this.setState({ i_want_received: token })
@@ -128,117 +118,14 @@ export default class Home extends React.Component {
     }
 
 
-    //Liquidate
-    click_liquidate = () => {
-        console.log(this.state.data[this.state.index].address) // 要清算的目标账户
-        var tar_address = this.state.data[this.state.index].address;
 
-        console.log(this.state.amount_to_liquidate) // 请求清算的数量
-        var tar_amount_to_liquidate = this.state.amount_to_liquidate * 10000;
-
-        var tar_borrow;
-
-        if (this.state.i_want_send === 'USDx') {
-            tar_borrow = address[this.state.net_type]['USDx'];
-            if (!this.state.i_will_liquidate_max) {
-                tar_amount_to_liquidate = this.bn(tar_amount_to_liquidate).mul(this.bn(10 ** this.state.decimals.USDx))
-            }
-
-        }
-        if (this.state.i_want_send === 'USDT') {
-            tar_borrow = address[this.state.net_type]['address_USDT'];
-            // console.log(address[this.state.net_type]['address_USDT'])
-            if (!this.state.i_will_liquidate_max) {
-                tar_amount_to_liquidate = this.bn(tar_amount_to_liquidate).mul(this.bn(10 ** this.state.decimals.USDT))
-            }
-
-        }
-        if (this.state.i_want_send === 'WETH') {
-            tar_borrow = address[this.state.net_type]['WETH'];
-            // console.log(address[this.state.net_type]['WETH']) // 目标账户借贷资产合约地址
-            if (!this.state.i_will_liquidate_max) {
-                tar_amount_to_liquidate = this.bn(tar_amount_to_liquidate).mul(this.bn(10 ** this.state.decimals.WETH))
-            }
-
-        }
-
-
-
-
-        var tar_supply;
-        if (this.state.i_want_received === 'USDx') {
-            tar_supply = address[this.state.net_type]['USDx'];
-        }
-        if (this.state.i_want_received === 'USDT') {
-            tar_supply = address[this.state.net_type]['address_USDT'];
-            // console.log(address[this.state.net_type]['address_USDT'])
-        }
-        if (this.state.i_want_received === 'WETH') {
-            tar_supply = address[this.state.net_type]['WETH'];
-        }
-
-        // console.log(tar_amount_to_liquidate.div(this.bn(100)).toString());
-        // return;
-
-        var last_argus;
-        if (this.state.i_will_liquidate_max) {
-            last_argus = this.state.amount_to_liquidate_bn;
-        } else {
-            last_argus = tar_amount_to_liquidate.div(this.bn(10000)).toString();
-        }
-        console.log(last_argus);
-        // return;
-
-        this.state.Liquidate.methods.liquidateBorrow(
-            tar_address, tar_borrow, tar_supply, last_argus
-        ).send(
-            { from: this.state.my_account },
-            (reject, res_hash) => {
-                if (res_hash) {
-                    console.log(res_hash);
-                }
-                if (reject) {
-                    console.log(reject)
-                }
-            }
-        )
-    }
 
     change_page = (page, pageSize) => {
         console.log(page, pageSize);
         // this.get_list_data(page);
     }
 
-    click_max = () => {
-        // console.log(this.state.i_want_send)//max_liquidate
-        // console.log(this.state.max_liquidate[this.state.i_want_send].amount_bn.toString());
-        var t_balance = this.state.max_liquidate[this.state.i_want_send].amount_bn.toString();
-        var to_show;
-        console.log(this.state.i_want_send);
 
-        if (this.state.i_want_send === 'USDx' || this.state.i_want_send === 'WETH') {
-            console.log(t_balance);
-            if (t_balance.length <= 18) {
-                to_show = ('0.' + ('000000000000000000' + t_balance).substr(-18)).substring(0, 18);
-            } else {
-                to_show = (this.bn(t_balance).div(this.bn(10 ** 18)) + '.' + t_balance.substr(-18)).substring(0, 18);
-            }
-        } else if (this.state.i_want_send === 'USDT') {
-            console.log(t_balance);
-            if (t_balance.length <= 6) {
-                to_show = ('0.' + ('000000000000000000' + t_balance).substr(-6)).substring(0, 6);
-            } else {
-                to_show = (this.bn(t_balance).div(this.bn(10 ** 6)) + '.' + t_balance.substr(-6)).substring(0, 18);
-            }
-        }
-
-        this.setState({
-            amount_to_liquidate: to_show,
-            i_will_liquidate_max: true,
-            amount_to_liquidate_bn: t_balance
-        })
-
-    }
 
 
     render() {
@@ -324,8 +211,61 @@ export default class Home extends React.Component {
                                 <tbody>
                                     <tr>
                                         <td>{'ETH'}</td>
-                                        <td>{'112.34'}</td>
-                                        <td>{'$712.34'}</td>
+                                        <td>
+                                            {
+                                                this.state.my_eth_balance ?
+                                                    format_bn(this.state.my_eth_balance, 18, 2) : '0'
+                                            }
+                                        </td>
+                                        <td>{'$'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{'WETH'}</td>
+                                        <td>
+                                            {
+                                                this.state.my_weth_balance ?
+                                                    format_bn(this.state.my_weth_balance, 18, 2) : '0'
+                                            }
+                                        </td>
+                                        <td>
+                                            {'$'}
+                                            {
+                                                !this.state.weth_approved && 
+                                                <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WETH, address[this.state.net_type]['liquidator'], 'weth') }} />
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{'USDx'}</td>
+                                        <td>
+                                            {
+                                                this.state.my_usdx_balance ?
+                                                    format_bn(this.state.my_usdx_balance, 18, 2) : '0'
+                                            }
+                                        </td>
+                                        <td>
+                                            {'$'}
+                                            {
+                                                !this.state.usdx_approved && 
+                                                <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDx, address[this.state.net_type]['liquidator'], 'usdx') }} />
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>{'USDT'}</td>
+                                        <td>
+                                            {
+                                                this.state.my_usdt_balance ?
+                                                    format_bn(this.state.my_usdt_balance, 6, 2) : '0'
+                                            }
+                                        </td>
+                                        <td>
+                                            {'$'}
+                                            {
+                                                !this.state.usdt_approved && 
+                                                <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDT, address[this.state.net_type]['liquidator'], 'usdt') }} />
+                                            }
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -419,11 +359,11 @@ export default class Home extends React.Component {
                                             onChange={(e) => { input_chang(this, e.target.value) }}
                                             value={this.state.amount_to_liquidate}
                                         />
-                                        <span className='max-tips' onClick={() => { this.click_max() }}>MAX</span>
+                                        <span className='max-tips' onClick={() => { click_max(this) }}>MAX</span>
                                     </div>
                                     <div className='button-wrap'>
                                         <Button
-                                            onClick={() => { this.click_liquidate() }}
+                                            onClick={() => { click_liquidate(this) }}
                                             className={this.state.is_btn_enable ? null : 'disable-button'}
                                         >
                                             Liquidate
