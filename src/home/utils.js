@@ -1,48 +1,57 @@
-let address_map = require('../ABIs/address_map.json');
-
-
 export const get_balance = (that) => {
     that.state.USDx.methods.balanceOf(that.state.my_account).call((err, res_usdx_balance) => {
         that.setState({ my_usdx_balance: res_usdx_balance });
+        // console.log(that.bn(that.state.my_eth_balance).div(that.state.usdx_price));
     })
+
     that.state.WETH.methods.balanceOf(that.state.my_account).call((err, res_weth_balance) => {
         that.setState({ my_weth_balance: res_weth_balance });
     })
+
     that.state.USDT.methods.balanceOf(that.state.my_account).call((err, res_usdt_balance) => {
         that.setState({ my_usdt_balance: res_usdt_balance });
     })
+
     that.new_web3.eth.getBalance(that.state.my_account, (err, res_eth_balance) => {
         that.setState({ my_eth_balance: res_eth_balance });
     });
+
+    that.state.imBTC.methods.balanceOf(that.state.my_account).call((err, res_imbtc_balance) => {
+        that.setState({ my_imbtc_balance: res_imbtc_balance });
+    })
 }
 
 
 export const get_allowance = (that, address_liquidator) => {
     that.state.USDx.methods.allowance(that.state.my_account, address_liquidator).call((err, res_usdx_allowance) => {
         if (that.bn(res_usdx_allowance).gt(that.bn('0'))) {
-            // console.log('res_allowance: yyy ', res_allowance);
             that.setState({ usdx_approved: true });
         } else {
-            // console.log('res_allowance: nnn ', res_allowance);
             that.setState({ usdx_approved: false });
         }
     });
+
     that.state.WETH.methods.allowance(that.state.my_account, address_liquidator).call((err, res_weth_allowance) => {
         if (that.bn(res_weth_allowance).gt(that.bn('0'))) {
-            // console.log('res_allowance: yyy ', res_allowance);
             that.setState({ weth_approved: true });
         } else {
-            // console.log('res_allowance: nnn ', res_allowance);
             that.setState({ weth_approved: false });
         }
     });
+
     that.state.USDT.methods.allowance(that.state.my_account, address_liquidator).call((err, res_usdt_allowance) => {
         if (that.bn(res_usdt_allowance).gt(that.bn('0'))) {
-            // console.log('res_allowance: yyy ', res_allowance);
             that.setState({ usdt_approved: true });
         } else {
-            // console.log('res_allowance: nnn ', res_allowance);
             that.setState({ usdt_approved: false });
+        }
+    });
+
+    that.state.imBTC.methods.allowance(that.state.my_account, address_liquidator).call((err, res_imbtc_allowance) => {
+        if (that.bn(res_imbtc_allowance).gt(that.bn('0'))) {
+            that.setState({ imbtc_approved: true });
+        } else {
+            that.setState({ imbtc_approved: false });
         }
     });
 }
@@ -50,10 +59,7 @@ export const get_allowance = (that, address_liquidator) => {
 
 export const get_list_data = (that, num) => {
     that.setState({ data_is_ok: false });
-
-    // https://test.lendf.me/v1/account?pageNumber=1&pageSize=17
-    // let list_api = 'https://api.lendf.me/v1/account?pageNumber=' + num + '&pageSize=15';
-    let list_api = 'https://test.lendf.me/v1/account?pageNumber=1&pageSize=10';
+    let list_api = 'https://test.lendf.me/v1/account?pageNumber=1&pageSize=15';
 
     fetch(list_api)
         .then((res) => { return res.text() })
@@ -64,8 +70,10 @@ export const get_list_data = (that, num) => {
 
                 for (var i = 0; i < arrList.length; i++) {
                     arrList[i].key = i;
-                    arrList[i].Supply = format_Shortfall(arrList[i].totalSupplyUSD);
-                    arrList[i].Borrow = format_Shortfall(arrList[i].totalBorrowUSD);
+                    // arrList[i].Supply = format_Shortfall(arrList[i].totalSupplyUSD);
+                    // arrList[i].Borrow = format_Shortfall(arrList[i].totalBorrowUSD);
+                    arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
+                    arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
                     arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
                 }
 
@@ -75,10 +83,14 @@ export const get_list_data = (that, num) => {
                     data_is_ok: true,
                     totalSize: data.request.totalSize,
                     i_want_send: arrList[0].borrow[0].symbol,
-                    i_want_received: arrList[0].supply[0].symbol
+                    i_want_received: arrList[0].supply[0].symbol,
+                    cur_page: data.request.pageNumber,
+                    totalPageNumber: data.request.totalPageNumber
                 }, () => {
                     handle_list_click(that, 0);
                 })
+
+                console.log(data);
             }
         })
 }
@@ -133,7 +145,6 @@ export const handle_list_click = (that, key) => {
                     max_liquidate_amount_show: data.maxClose.amount
                 })
             })
-
     })
 }
 
@@ -164,6 +175,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                                 that.setState({ usdx_approved: true })
                                             } else if (token === 'usdt') {
                                                 that.setState({ usdt_approved: true })
+                                            } else if (token === 'imbtc') {
+                                                that.setState({ imbtc_approved: true })
                                             }
                                         }
                                     }
@@ -176,6 +189,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                             that.setState({ usdx_approved: false })
                                         } else if (token === 'usdt') {
                                             that.setState({ usdt_approved: false })
+                                        } else if (token === 'imbtc') {
+                                            that.setState({ imbtc_approved: false })
                                         }
                                     }
                                 })
@@ -195,8 +210,6 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
 
 
 }
-
-
 
 
 export const format_bn = (numStr, decimals, decimalPlace = decimals) => {
@@ -230,7 +243,6 @@ export const format_Shortfall = (num) => {
 
 
 export const format_persent = (num) => {
-    // var str_num = num.toString();
     return (num * 100).toFixed(2) + '%';
 }
 
@@ -288,23 +300,11 @@ export const input_chang = (that, value) => {
         }
     }
 
-
-
-    // if (!this.state.i_want_send) {
-    //     console.log('i_want_send---no');
-    //     return false;
-    // } else {
-    //     this.setState({ amount_to_liquidate: val })
-    // }
-
-    // this.setState({ amount_to_liquidate: val })
     that.setState({
         amount_to_liquidate: value,
         i_will_liquidate_max: false,
         is_btn_enable: true,
     })
-
-
 }
 
 
@@ -341,6 +341,10 @@ export const click_liquidate = (that) => {
     }
 
     console.log('last_argus: ', last_argus);
+    if (tar_address === that.state.my_account) {
+        console.log('tar_address is you. you can not Liquidate yourself.');
+        return false;
+    }
 
     that.state.Liquidate.methods.liquidateBorrow(tar_address, tar_borrow, tar_supply, last_argus).estimateGas(
         { from: that.state.my_account }, (err, gasLimit) => {
@@ -397,6 +401,89 @@ export const click_max = (that) => {
         amount_to_liquidate: to_show,
         i_will_liquidate_max: true
     })
+}
+
+
+export const i_want_received_token = (that, item) => {
+    that.setState({
+        i_want_received: item.symbol,
+        i_want_received_address: item.asset
+    })
+}
+
+
+export const i_want_send_token = (that, item) => {
+    that.setState({
+        max_liquidate_amount: '',
+        max_liquidate_amount_show: '',
+        i_want_send: item.symbol,
+        i_want_send_address: item.asset,
+        now_new_decimals: item.decimal
+    }, () => {
+        // console.log(that.state.choosen_item);
+        var targetAccount = that.state.data[that.state.index].address;
+        var assetBorrow = that.state.i_want_send_address;
+        var assetCollateral = that.state.i_want_received_address;
+        var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+
+        // console.log(get_max_api)
+        fetch(get_max_api)
+            .then((res) => { return res.text() })
+            .then((data) => {
+                data = JSON.parse(data);
+                // console.log(data.maxClose.amountRaw)
+                that.setState({
+                    max_liquidate_amount: data.maxClose.amountRaw,
+                    max_liquidate_amount_show: data.maxClose.amount
+                })
+            })
+    });
+}
+
+
+export const change_page = (that, page, pageSize) => {
+    that.setState({ data_is_ok: false });
+    var list_api;
+
+    if (Number(that.state.totalPageNumber) === Number(page)) {
+        var last_num = that.state.totalSize % page;
+        list_api = 'https://test.lendf.me/v1/account?pageNumber=' + page + '&pageSize=' + last_num;
+    } else {
+        list_api = 'https://test.lendf.me/v1/account?pageNumber=' + page + '&pageSize=15';
+    }
+
+    fetch(list_api)
+        .then((res) => { return res.text() })
+        .then((data) => {
+            if (data) {
+                data = JSON.parse(data);
+                var arrList = data.accounts;
+
+                for (var i = 0; i < arrList.length; i++) {
+                    arrList[i].key = i;
+                    // arrList[i].Supply = format_Shortfall(arrList[i].totalSupplyUSD);
+                    // arrList[i].Borrow = format_Shortfall(arrList[i].totalBorrowUSD);
+                    arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
+                    arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
+                    arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
+                }
+
+                console.log(arrList);
+                that.setState({
+                    data: arrList,
+                    data_is_ok: true,
+                    totalSize: data.request.totalSize,
+                    i_want_send: arrList[0].borrow[0].symbol,
+                    i_want_received: arrList[0].supply[0].symbol,
+                    cur_page: data.request.pageNumber,
+                    totalPageNumber: data.request.totalPageNumber
+                }, () => {
+                    handle_list_click(that, 0);
+                })
+
+                console.log(data);
+            }
+        })
 }
 
 

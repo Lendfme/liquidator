@@ -85,39 +85,36 @@
                         width: 830px;
 
                         th {
-                            // flex: 1;
-                            // line-height: 67px;
+                            line-height: 70px;
+                        }
 
-                            &.th-1 {
-                                // background: red;
-                                width: 90px;
-                                padding-top: 9px;
-                            }
 
-                            &.th-2 {
-                                // background: palegreen;
-                                // width: 190px;
-                                line-height: 67px;
-                                flex: 1;
-                            }
+                        th:nth-child(1) {
+                            // background: red;
+                            width: 150px;
+                            padding-left: 15px;
+                        }
 
-                            &.th-3 {
-                                // background: goldenrod;
-                                width: 120px;
-                                padding-top: 9px;
-                            }
+                        th:nth-child(2) {
+                            // background: red;
+                            width: 150px;
+                        }
 
-                            &.th-4 {
-                                // background: olive;
-                                width: 120px;
-                                padding-top: 9px;
-                            }
+                        th:nth-child(3) {
+                            // background: red;
+                            flex: 1;
+                        }
 
-                            &.th-5 {
-                                // background: sandybrown;
-                                width: 150px;
-                                padding-top: 9px;
-                            }
+                        th:nth-child(4) {
+                            // background: red;
+                            flex: 1;
+                        }
+
+                        th:nth-child(5) {
+                            // background: red;
+                            width: 186px;
+                            text-align: right;
+                            padding-right: 15px;
                         }
                     }
                 }
@@ -142,45 +139,51 @@
                             // flex: 1;
                             height: 50px;
                             line-height: 50px;
+                        }
 
-                            &.td-1 {
-                                // background: red;
-                                width: 90px;
-                                text-align: left;
-                                padding-left: 10px;
-                            }
+                        td:nth-child(1) {
+                            // background: red;
+                            width: 150px;
+                            text-align: left;
+                            padding-left: 15px;
+                        }
 
-                            &.td-2 {
-                                // background: palegreen;
-                                // width: 190px;
-                                text-align: center;
-                                flex: 1;
-                            }
+                        td:nth-child(2) {
+                            // background: red;
+                            width: 150px;
+                            text-align: center;
+                        }
 
-                            &.td-3 {
-                                // background: goldenrod;
-                                width: 120px;
-                                text-align: right;
-                                padding-right: 25px;
-                            }
+                        td:nth-child(3) {
+                            // background: red;
+                            flex: 1;
+                            text-align: right;
+                            padding-right: 35px;
+                        }
 
-                            &.td-4 {
-                                // background: olive;
-                                width: 120px;
-                                text-align: right;
-                                padding-right: 25px;
-                            }
+                        td:nth-child(4) {
+                            // background: red;
+                            flex: 1;
+                            text-align: right;
+                            padding-right: 35px;
+                        }
 
-                            &.td-5 {
-                                // background: sandybrown;
-                                width: 150px;
-                                text-align: right;
-                                padding-right: 25px;
-                            }
+                        td:nth-child(5) {
+                            // background: red;
+                            width: 186px;
+                            text-align: right;
+                            padding-right: 25px;
                         }
                     }
                 }
             }
+        }
+
+        .page {
+            padding-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 
@@ -215,33 +218,61 @@
                             font-size: 14px;
                             font-weight: 500;
                             color: rgba(53, 51, 62, 1);
-                            padding-bottom: 5px;
+                            // background-color: red;
+                            line-height: 40px;
+
+                            &.th-1 {
+                                padding-left: 15px;
+                            }
+
+                            &.th-2 {
+                                text-align: center;
+                            }
+
+                            &.th-3 {
+                                text-align: right;
+                                padding-right: 15px;
+                            }
                         }
                     }
                 }
 
                 tbody {
+                    tr:nth-child(2n-1) {
+                        background: #F2F3FB;
+                    }
+
                     tr {
-                        &:hover {
-                            background: #F0EEFF;
-                            cursor: pointer;
-                        }
-
-                        &.active {
-                            background: #F0EEFF;
-                            cursor: pointer;
-                        }
-
                         td {
                             width: 33.33%;
                             font-size: 12px;
                             font-weight: 400;
-                            padding-bottom: 5px;
                             color: rgba(53, 51, 62, 1);
+                            line-height: 36px;
 
-                            img {
-                                width: 20px;
+                            &.td-1 {
+                                padding-left: 15px;
+                                position: relative;
+
+                                img {
+                                    width: 16px;
+                                    position: absolute;
+                                    top: 9px;
+                                    left: 57px;
+                                    cursor: pointer;
+                                }
                             }
+
+                            &.td-2 {
+                                text-align: center;
+                            }
+
+                            &.td-3 {
+                                text-align: right;
+                                padding-right: 15px;
+                            }
+
+
                         }
                     }
                 }
@@ -281,7 +312,6 @@
             }
 
             .supply-table {
-                padding-top: 5px;
                 border-bottom: 1px solid #E6EAEE;
 
                 table {
@@ -295,8 +325,13 @@
                                 font-size: 14px;
                                 font-weight: 500;
                                 color: rgba(53, 51, 62, 1);
-                                padding-bottom: 5px;
                                 padding-left: 15px;
+                                line-height: 40px;
+                            }
+
+                            th:nth-child(2) {
+                                text-align: right;
+                                padding-right: 15px;
                             }
                         }
                     }
@@ -317,9 +352,14 @@
                                 width: 50%;
                                 font-size: 12px;
                                 font-weight: 400;
-                                padding-bottom: 5px;
+                                line-height: 36px;
                                 color: rgba(53, 51, 62, 1);
                                 padding-left: 15px;
+                            }
+
+                            td:nth-child(2) {
+                                text-align: right;
+                                padding-right: 15px;
                             }
                         }
                     }
@@ -327,7 +367,6 @@
             }
 
             .borrow-table {
-                padding-top: 5px;
                 border-bottom: 1px solid #E6EAEE;
 
                 table {
@@ -339,15 +378,29 @@
                         tr {
 
                             th {
-                                width: 22.5%;
+                                width: 30%;
                                 font-size: 14px;
                                 font-weight: 500;
                                 color: rgba(53, 51, 62, 1);
-                                padding-bottom: 5px;
+                                line-height: 40px;
 
-                                &.escpecil {
-                                    width: 45%;
-                                }
+                                // &.escpecil {
+                                //     width: 45%;
+                                // }
+                            }
+
+                            th:nth-child(1) {
+                                padding-left: 15px;
+                            }
+
+                            th:nth-child(2) {
+                                text-align: center;
+                            }
+
+                            th:nth-child(3) {
+                                text-align: right;
+                                padding-right: 15px;
+                                width: 40%;
                             }
                         }
                     }
@@ -368,12 +421,25 @@
                                 width: 22.5%;
                                 font-size: 12px;
                                 font-weight: 400;
-                                padding-bottom: 5px;
                                 color: rgba(53, 51, 62, 1);
+                                line-height: 36px;
 
                                 &.escpecil {
                                     width: 45%;
                                 }
+                            }
+
+                            td:nth-child(1) {
+                                padding-left: 15px;
+                            }
+
+                            td:nth-child(2) {
+                                text-align: center;
+                            }
+
+                            td:nth-child(3) {
+                                text-align: right;
+                                padding-right: 15px;
                             }
                         }
                     }
@@ -384,11 +450,14 @@
                 padding-top: 5px;
                 padding-left: 15px;
                 padding-right: 15px;
+                padding-bottom: 20px;
 
                 .liquidate-title {
                     font-size: 14px;
                     font-weight: 500;
                     color: rgba(53, 51, 62, 1);
+                    padding-bottom: 8px;
+                    padding-top: 8px;
                 }
 
                 .liquidate-con {
@@ -399,20 +468,20 @@
                     // align-items: center;
 
                     .button-wrap {
-                        width: 80px;
+                        width: 90px;
                         margin-left: 10px;
 
                         button {
                             width: 100%;
+                            text-align: center;
                             border-color: #8472FF !important;
                             background-color: #8472FF !important;
                             color: #FFFFFF !important;
 
-                            &:hover,
-                            &:active {
-                                background-color: rgba(#8472FF, 0.85);
-                                border-color: rgba(#8472FF, 0.85);
-                                color: #FFFFFF;
+                            &:hover {
+                                background-color: rgba(#8472FF, 0.85) !important;
+                                border-color: rgba(#8472FF, 0.85) !important;
+                                color: #FFFFFF !important;
                             }
 
                             &.disable-button {
@@ -430,7 +499,7 @@
                         .max-tips {
                             position: absolute;
                             right: 15px;
-                            top: 4px;
+                            top: 6px;
                             cursor: pointer;
                             color: #8472FF;
                         }
