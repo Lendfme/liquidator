@@ -1,0 +1,8 @@
+{
+    "main": {
+        "account_list_url": ""
+    },
+    "rinkeby": {
+        "account_list_url": "https://test.lendf.me/v1/account"
+    }
+}

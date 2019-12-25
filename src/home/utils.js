@@ -1,3 +1,6 @@
+let url_map = require('../ABIs/url_map.json');
+
+
 export const get_balance = (that) => {
     that.state.USDx.methods.balanceOf(that.state.my_account).call((err, res_usdx_balance) => {
         that.setState({ my_usdx_balance: res_usdx_balance });
@@ -59,7 +62,7 @@ export const get_allowance = (that, address_liquidator) => {
 
 export const get_list_data = (that, num) => {
     that.setState({ data_is_ok: false });
-    let list_api = 'https://test.lendf.me/v1/account?pageNumber=1&pageSize=15';
+    let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
 
     fetch(list_api)
         .then((res) => { return res.text() })
@@ -368,6 +371,8 @@ export const click_liquidate = (that) => {
                                             that.setState({
                                                 amount_to_liquidate: ''
                                             })
+                                            get_balance(that);
+                                            change_page(that, that.state.cur_page, that.state.pageSize, that.state.index);
                                         }
                                     }
                                     if (res_fail) {
@@ -441,15 +446,15 @@ export const i_want_send_token = (that, item) => {
 }
 
 
-export const change_page = (that, page, pageSize) => {
+export const change_page = (that, page, pageSize, key) => {
     that.setState({ data_is_ok: false });
     var list_api;
 
     if (Number(that.state.totalPageNumber) === Number(page)) {
         var last_num = that.state.totalSize % page;
-        list_api = 'https://test.lendf.me/v1/account?pageNumber=' + page + '&pageSize=' + last_num;
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=' + last_num;
     } else {
-        list_api = 'https://test.lendf.me/v1/account?pageNumber=' + page + '&pageSize=15';
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
     }
 
     fetch(list_api)
@@ -478,7 +483,7 @@ export const change_page = (that, page, pageSize) => {
                     cur_page: data.request.pageNumber,
                     totalPageNumber: data.request.totalPageNumber
                 }, () => {
-                    handle_list_click(that, 0);
+                    handle_list_click(that, key || 0);
                 })
 
                 console.log(data);
