@@ -214,7 +214,7 @@
                 thead {
                     tr {
                         th {
-                            width: 33.33%;
+                            width: 50%;
                             font-size: 14px;
                             font-weight: 500;
                             color: rgba(53, 51, 62, 1);
@@ -226,13 +226,14 @@
                             }
 
                             &.th-2 {
-                                text-align: center;
-                            }
-
-                            &.th-3 {
                                 text-align: right;
                                 padding-right: 15px;
                             }
+
+                            // &.th-3 {
+                            //     text-align: right;
+                            //     padding-right: 15px;
+                            // }
                         }
                     }
                 }
@@ -244,7 +245,7 @@
 
                     tr {
                         td {
-                            width: 33.33%;
+                            width: 50%;
                             font-size: 12px;
                             font-weight: 400;
                             color: rgba(53, 51, 62, 1);
@@ -264,13 +265,14 @@
                             }
 
                             &.td-2 {
-                                text-align: center;
-                            }
-
-                            &.td-3 {
                                 text-align: right;
                                 padding-right: 15px;
                             }
+
+                            // &.td-3 {
+                            //     text-align: right;
+                            //     padding-right: 15px;
+                            // }
 
 
                         }
@@ -288,7 +290,7 @@
 
 
             .account {
-                padding-top: 5px;
+                padding-top: 15px;
                 padding-left: 15px;
                 border-bottom: 1px solid #E6EAEE;
 

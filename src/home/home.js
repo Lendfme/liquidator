@@ -221,20 +221,20 @@ export default class Home extends React.Component {
 
                     <div className='main-body-right'>
                         <div className='main-body-balance'>
-                            <h3>Wallet Balances</h3>
+                            {/* <h3>Wallet Balances</h3> */}
                             <table>
                                 <thead>
                                     <tr>
                                         <th className='th-1'>Asset</th>
                                         <th className='th-2'>Balance</th>
-                                        <th className='th-3'>USD</th>
+                                        {/* <th className='th-3'>USD</th> */}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td className='td-1'>{'ETH'}</td>
                                         <td className='td-2'>{this.state.my_eth_balance ? format_bn(this.state.my_eth_balance, 18, 2) : '0'}</td>
-                                        <td className='td-3'>{'$'}</td>
+                                        {/* <td className='td-3'>{'$'}</td> */}
                                     </tr>
 
                                     <tr>
@@ -246,7 +246,7 @@ export default class Home extends React.Component {
                                             }
                                         </td>
                                         <td className='td-2'>{this.state.my_weth_balance ? format_bn(this.state.my_weth_balance, 18, 2) : '0'}</td>
-                                        <td className='td-3'>{'$'}</td>
+                                        {/* <td className='td-3'>{'$'}</td> */}
                                     </tr>
 
                                     <tr>
@@ -258,7 +258,7 @@ export default class Home extends React.Component {
                                             }
                                         </td>
                                         <td className='td-2'>{this.state.my_usdx_balance ? format_bn(this.state.my_usdx_balance, 18, 2) : '0'}</td>
-                                        <td className='td-3'>{'$'}</td>
+                                        {/* <td className='td-3'>{'$'}</td> */}
                                     </tr>
 
                                     <tr>
@@ -270,7 +270,7 @@ export default class Home extends React.Component {
                                             }
                                         </td>
                                         <td className='td-2'>{this.state.my_usdt_balance ? format_bn(this.state.my_usdt_balance, 6, 2) : '0'}</td>
-                                        <td className='td-3'>{'$'}</td>
+                                        {/* <td className='td-3'>{'$'}</td> */}
                                     </tr>
 
                                     <tr>
@@ -282,14 +282,14 @@ export default class Home extends React.Component {
                                             }
                                         </td>
                                         <td className='td-2'>{this.state.my_imbtc_balance ? format_bn(this.state.my_imbtc_balance, 8, 2) : '0'}</td>
-                                        <td className='td-3'>{'$'}</td>
+                                        {/* <td className='td-3'>{'$'}</td> */}
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         <div className='main-body-details'>
-                            <h3>Liquidation</h3>
+                            {/* <h3>Liquidation</h3> */}
                             <div className='account'>
                                 <span className='account-title'>Account:</span>
                                 <span className='account-address'>
