@@ -465,13 +465,14 @@
                 .liquidate-con {
                     padding-top: 5px;
                     width: 100%;
-                    display: flex;
+                    // display: flex;
                     // justify-content: center;
                     // align-items: center;
 
                     .button-wrap {
-                        width: 90px;
-                        margin-left: 10px;
+                        // width: 90px;
+                        width: 100%;
+                        margin-top: 15px;
 
                         button {
                             width: 100%;
@@ -495,7 +496,7 @@
                     }
 
                     .input-wrap {
-                        flex: 1;
+                        // flex: 1;
                         position: relative;
 
                         .max-tips {

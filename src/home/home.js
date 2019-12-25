@@ -19,7 +19,8 @@ import {
     calc_balance_to_USD,
     i_want_received_token,
     i_want_send_token,
-    change_page
+    change_page,
+    get_list_data_p
 } from './utils';
 
 import logo from '../images/logo.svg';
@@ -125,6 +126,12 @@ export default class Home extends React.Component {
                 })
             });
         }
+
+
+        this.update_list_timer = setInterval(() => {
+            get_balance(this);
+            get_list_data_p(this, 1);
+        }, 1000 * 15)
     }
 
 
@@ -385,7 +392,7 @@ export default class Home extends React.Component {
                                             onClick={() => { click_liquidate(this) }}
                                             className={this.state.is_btn_enable ? null : 'disable-button'}
                                         >
-                                            Liquidate
+                                            LIQUIDATE
                                         </Button>
                                     </div>
                                 </div>

@@ -99,6 +99,41 @@ export const get_list_data = (that, num) => {
 }
 
 
+export const get_list_data_p = (that, num) => {
+    that.setState({ data_is_ok: false });
+    let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
+
+    fetch(list_api)
+        .then((res) => { return res.text() })
+        .then((data) => {
+            if (data) {
+                data = JSON.parse(data);
+                var arrList = data.accounts;
+
+                for (var i = 0; i < arrList.length; i++) {
+                    arrList[i].key = i;
+                    arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
+                    arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
+                    arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
+                }
+
+                console.log(arrList);
+                that.setState({
+                    data: arrList,
+                    data_is_ok: true,
+                    totalSize: data.request.totalSize,
+                    i_want_send: arrList[0].borrow[0].symbol,
+                    i_want_received: arrList[0].supply[0].symbol,
+                    cur_page: data.request.pageNumber,
+                    totalPageNumber: data.request.totalPageNumber
+                })
+
+                console.log(data);
+            }
+        })
+}
+
+
 export const get_markets = () => {
     let markets_api = 'https://api.lendf.me/v1/info?data=markets';
 
