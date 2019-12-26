@@ -410,7 +410,7 @@ export default class Home extends React.Component {
                                                 className={this.state.is_btn_enable ? null : 'disable-button'}
                                             >
                                                 <FormattedMessage id='LIQUIDATE' />
-                                        </Button>
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -422,13 +422,29 @@ export default class Home extends React.Component {
 
                     <div className='footer'>
                         <div className='footer-left'>
-                            <a href='www.abc.com' target='_blank'>GitHub</a>
-                            <a href='www.abc.com' target='_blank'>FAQ</a>
+                            <a
+                                href='https://github.com/Lendfme/liquidator'
+                                target='_blank'
+                                rel="noopener noreferrer"
+                            >GitHub</a>
+                            <a
+                                href='https://docs.lendf.me/faq'
+                                target='_blank'
+                                rel="noopener noreferrer"
+                            >FAQ</a>
                         </div>
 
                         <div className='footer-right'>
-                            <a href='www.abc.com' target='_blank'><img src={telegram} alt='' /></a>
-                            <a href='www.abc.com' target='_blank'><img src={twitter} alt='' /></a>
+                            <a
+                                href='https://t.me/dforcenet'
+                                target='_blank'
+                                rel="noopener noreferrer"
+                            ><img src={telegram} alt='' /></a>
+                            <a
+                                href='https://twitter.com/dForcenet'
+                                target='_blank'
+                                rel="noopener noreferrer"
+                            ><img src={twitter} alt='' /></a>
                         </div>
                         <div className='clear'></div>
                     </div>
