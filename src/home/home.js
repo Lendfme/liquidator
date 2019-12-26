@@ -20,7 +20,7 @@ import {
     i_want_received_token,
     i_want_send_token,
     change_page,
-    get_list_data_p
+    get_main_data_timer
 } from './utils';
 
 import logo from '../images/logo.svg';
@@ -69,7 +69,7 @@ export default class Home extends React.Component {
             amount_to_liquidate: '',
             data_is_ok: false,
             is_btn_enable: true,
-            cur_page: 1,
+            pageNumber: 1,
             pageSize: 15
         }
 
@@ -130,7 +130,7 @@ export default class Home extends React.Component {
 
         this.update_list_timer = setInterval(() => {
             get_balance(this);
-            get_list_data_p(this, 1);
+            get_main_data_timer(this);
         }, 1000 * 15)
     }
 
@@ -172,7 +172,16 @@ export default class Home extends React.Component {
                         }
                         {
                             this.state.my_account &&
-                            <div className='top-right-account'>{this.state.my_account.slice(0, 6) + '...' + this.state.my_account.slice(-6)}</div>
+                            <div className='top-right-account'>
+                                <div className='net'>
+                                    <span className='net-name'>{this.state.net_type.substring(0, 1).toUpperCase() + this.state.net_type.substring(1)}</span>
+                                    <span className={'spot ' + this.state.net_type}></span>
+                                </div>
+                                <div className='clear'></div>
+                                <div className='account'>
+                                    {this.state.my_account.slice(0, 6) + '...' + this.state.my_account.slice(-6)}
+                                </div>
+                            </div>
                         }
                     </div>
                     <div className='clear'></div>
@@ -218,7 +227,7 @@ export default class Home extends React.Component {
                             <Pagination
                                 showQuickJumper
                                 pageSize={this.state.pageSize}
-                                defaultCurrent={this.state.cur_page}
+                                defaultCurrent={this.state.pageNumber}
                                 total={this.state.totalSize ? this.state.totalSize : 0}
                                 onChange={(page, pageSize) => { change_page(this, page, pageSize) }}
                             />

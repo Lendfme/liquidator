@@ -87,7 +87,7 @@ export const get_list_data = (that, num) => {
                     totalSize: data.request.totalSize,
                     i_want_send: arrList[0].borrow[0].symbol,
                     i_want_received: arrList[0].supply[0].symbol,
-                    cur_page: data.request.pageNumber,
+                    pageNumber: data.request.pageNumber,
                     totalPageNumber: data.request.totalPageNumber
                 }, () => {
                     handle_list_click(that, 0);
@@ -99,39 +99,39 @@ export const get_list_data = (that, num) => {
 }
 
 
-export const get_list_data_p = (that, num) => {
-    that.setState({ data_is_ok: false });
-    let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
+// export const get_list_data_p = (that, num) => {
+//     that.setState({ data_is_ok: false });
+//     let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
 
-    fetch(list_api)
-        .then((res) => { return res.text() })
-        .then((data) => {
-            if (data) {
-                data = JSON.parse(data);
-                var arrList = data.accounts;
+//     fetch(list_api)
+//         .then((res) => { return res.text() })
+//         .then((data) => {
+//             if (data) {
+//                 data = JSON.parse(data);
+//                 var arrList = data.accounts;
 
-                for (var i = 0; i < arrList.length; i++) {
-                    arrList[i].key = i;
-                    arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
-                    arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
-                    arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
-                }
+//                 for (var i = 0; i < arrList.length; i++) {
+//                     arrList[i].key = i;
+//                     arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
+//                     arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
+//                     arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
+//                 }
 
-                console.log(arrList);
-                that.setState({
-                    data: arrList,
-                    data_is_ok: true,
-                    totalSize: data.request.totalSize,
-                    i_want_send: arrList[0].borrow[0].symbol,
-                    i_want_received: arrList[0].supply[0].symbol,
-                    cur_page: data.request.pageNumber,
-                    totalPageNumber: data.request.totalPageNumber
-                })
+//                 console.log(arrList);
+//                 that.setState({
+//                     data: arrList,
+//                     data_is_ok: true,
+//                     totalSize: data.request.totalSize,
+//                     i_want_send: arrList[0].borrow[0].symbol,
+//                     i_want_received: arrList[0].supply[0].symbol,
+//                     pageNumber: data.request.pageNumber,
+//                     totalPageNumber: data.request.totalPageNumber
+//                 })
 
-                console.log(data);
-            }
-        })
-}
+//                 console.log(data);
+//             }
+//         })
+// }
 
 
 export const get_markets = () => {
@@ -407,7 +407,7 @@ export const click_liquidate = (that) => {
                                                 amount_to_liquidate: ''
                                             })
                                             get_balance(that);
-                                            change_page(that, that.state.cur_page, that.state.pageSize, that.state.index);
+                                            change_page(that, that.state.pageNumber, that.state.pageSize, that.state.index);
                                         }
                                     }
                                     if (res_fail) {
@@ -446,8 +446,29 @@ export const click_max = (that) => {
 
 export const i_want_received_token = (that, item) => {
     that.setState({
+        max_liquidate_amount: '',
+        max_liquidate_amount_show: '',
         i_want_received: item.symbol,
-        i_want_received_address: item.asset
+        i_want_received_address: item.asset,
+        now_new_decimals: item.decimal
+    }, () => {
+        // console.log(that.state.choosen_item);
+        var targetAccount = that.state.data[that.state.index].address;
+        var assetBorrow = that.state.i_want_send_address;
+        var assetCollateral = that.state.i_want_received_address;
+        var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+
+        // console.log(get_max_api)
+        fetch(get_max_api)
+            .then((res) => { return res.text() })
+            .then((data) => {
+                data = JSON.parse(data);
+                // console.log(data.maxClose.amountRaw)
+                that.setState({
+                    max_liquidate_amount: data.maxClose.amountRaw,
+                    max_liquidate_amount_show: data.maxClose.amount
+                })
+            })
     })
 }
 
@@ -515,7 +536,7 @@ export const change_page = (that, page, pageSize, key) => {
                     totalSize: data.request.totalSize,
                     i_want_send: arrList[0].borrow[0].symbol,
                     i_want_received: arrList[0].supply[0].symbol,
-                    cur_page: data.request.pageNumber,
+                    pageNumber: data.request.pageNumber,
                     totalPageNumber: data.request.totalPageNumber
                 }, () => {
                     handle_list_click(that, key || 0);
@@ -526,4 +547,39 @@ export const change_page = (that, page, pageSize, key) => {
         })
 }
 
+
+
+export const get_main_data_timer = (that) => {
+    var list_api;
+    if (Number(that.state.totalPageNumber) === Number(that.state.pageNumber) && (that.state.totalSize % that.state.pageNumber !== 0)) {
+        var last_num = that.state.totalSize % that.state.pageNumber;
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=' + last_num;
+    } else {
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
+    }
+    // console.log(list_api);
+
+    fetch(list_api)
+        .then((res) => { return res.text() })
+        .then((data) => {
+            if (data) {
+                data = JSON.parse(data);
+                var arrList = data.accounts;
+                // console.log(arrList);
+                for (var i = 0; i < arrList.length; i++) {
+                    arrList[i].key = i;
+                    arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
+                    arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
+                    arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
+                }
+                // console.log(arrList);
+                that.setState({
+                    data: arrList,
+                    totalSize: data.request.totalSize,
+                    pageNumber: data.request.pageNumber,
+                    totalPageNumber: data.request.totalPageNumber
+                })
+            }
+        })
+}
 

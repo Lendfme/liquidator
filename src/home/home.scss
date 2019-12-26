@@ -49,7 +49,38 @@
             font-size: 16px;
             font-weight: 500;
             color: rgba(53, 51, 62, 1);
-            padding-top: 10px;
+            // padding-top: 10px;
+
+            .net {
+                // background: red;
+                position: relative;
+
+                .spot {
+                    display: block;
+                    // position: absolute;
+                    // top: 8px;
+                    // right: 60px;
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: #666;
+                    float: right;
+                    margin-right: 7px;
+                    margin-top: 9px;
+
+                    &.main {
+                        background: rgba(39, 170, 160, 1);
+                    }
+
+                    &.rinkeby {
+                        background: rgba(232, 187, 102, 1);
+                    }
+                }
+
+                .net-name {
+                    float: right;
+                }
+            }
         }
     }
 }
@@ -502,9 +533,10 @@
                         .max-tips {
                             position: absolute;
                             right: 15px;
-                            top: 6px;
+                            top: 10px;
                             cursor: pointer;
                             color: #8472FF;
+                            font-size: 14px;
                         }
                     }
 
