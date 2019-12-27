@@ -428,10 +428,14 @@ export default class Home extends React.Component {
                                         </div>
                                         <div className='button-wrap'>
                                             <Button
+                                                loading={this.state.loading}
                                                 onClick={() => { click_liquidate(this) }}
                                                 className={this.state.is_btn_enable ? null : 'disable-button'}
                                             >
-                                                <FormattedMessage id='LIQUIDATE' />
+                                                {
+                                                    this.state.loading ?
+                                                        <FormattedMessage id='SUBMITTING' /> : <FormattedMessage id='LIQUIDATE' />
+                                                }
                                             </Button>
                                         </div>
                                     </div>

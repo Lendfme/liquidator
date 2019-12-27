@@ -12,6 +12,7 @@ const en_US = {
     Borrow: 'Borrow',
     MAX_Liquidation: 'MAX Liquidation',
     RequestedAmountClose: 'RequestedAmountClose',
-    LIQUIDATE: 'LIQUIDATE'
+    LIQUIDATE: 'LIQUIDATE',
+    SUBMITTING: ' SUBMITTING…'
 }
 export default en_US;

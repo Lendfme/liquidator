@@ -12,6 +12,7 @@ const zh_CN = {
     Borrow: '借款资产',
     MAX_Liquidation: '最大清算量',
     RequestedAmountClose: '被清算资产',
-    LIQUIDATE: '清算'
+    LIQUIDATE: '清算',
+    SUBMITTING: ' 清算中…'
 }
 export default zh_CN;

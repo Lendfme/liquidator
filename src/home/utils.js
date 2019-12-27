@@ -317,6 +317,8 @@ export const click_liquidate = (that) => {
         return false;
     }
 
+    that.setState({ loading: true });
+
     var tar_address = that.state.data[that.state.index].address; // 要清算的目标账户
     var tar_amount_to_liquidate = that.state.amount_to_liquidate; // 请求清算的数量
     // var tar_borrow = address_map[that.state.net_type][that.state.i_want_send];
@@ -344,7 +346,7 @@ export const click_liquidate = (that) => {
     }
 
     console.log('last_argus: ', last_argus);
-    if (tar_address === that.state.my_account) {
+    if (tar_address.toLowerCase() === that.state.my_account.toLowerCase()) {
         console.log('tar_address is you. you can not Liquidate yourself.');
         return false;
     }
@@ -369,7 +371,8 @@ export const click_liquidate = (that) => {
                                         clearInterval(check_Liquidate);
                                         if (res_success.status === true) {
                                             that.setState({
-                                                amount_to_liquidate: ''
+                                                amount_to_liquidate: '',
+                                                loading: false
                                             })
                                             get_balance(that);
                                             change_page(that, that.state.pageNumber, that.state.pageSize, that.state.index);
@@ -378,11 +381,13 @@ export const click_liquidate = (that) => {
                                     if (res_fail) {
                                         console.log(res_fail);
                                         clearInterval(check_Liquidate);
+                                        that.setState({ loading: false });
                                     }
                                 })
                             }, 2000)
                         }
                         if (reject) {
+                            that.setState({ loading: false });
                             console.log(reject)
                         }
                     }
