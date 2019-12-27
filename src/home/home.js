@@ -460,20 +460,22 @@ export default class Home extends React.Component {
 
                         <div className='footer-right'>
                             <a
-                                href='https://t.me/dforcenet'
+                                href='https://twitter.com/LendfMe'
                                 target='_blank'
                                 rel="noopener noreferrer"
-                            ><img src={telegram} alt='' /></a>
+                            ><img src={twitter} alt='' /></a>
+
                             <a
                                 href='https://medium.com/dforcenet'
                                 target='_blank'
                                 rel="noopener noreferrer"
                             ><img src={medium} alt='' /></a>
+
                             <a
-                                href='https://twitter.com/LendfMe'
+                                href='https://t.me/dforcenet'
                                 target='_blank'
                                 rel="noopener noreferrer"
-                            ><img src={twitter} alt='' /></a>
+                            ><img src={telegram} alt='' /></a>
                         </div>
 
                         <div className='footer-right'>
