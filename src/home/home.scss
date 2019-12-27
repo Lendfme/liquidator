@@ -568,6 +568,7 @@
 
     .footer-left {
         float: left;
+        padding-top: 5px;
 
         a {
             margin-right: 30px;
@@ -607,18 +608,19 @@
                 margin-right: 15px;
                 cursor: pointer;
                 padding-left: 5px;
+                padding-top: 5px;
 
-                &::after {
-                    content: '';
-                    display: block;
-                    position: absolute;
-                    width: 0px;
-                    height: 0px;
-                    border: 3px solid transparent;
-                    border-bottom: 5px solid #333;
-                    right: 2px;
-                    top: 3px;
-                }
+                // &::after {
+                //     content: '';
+                //     display: block;
+                //     position: absolute;
+                //     width: 0px;
+                //     height: 0px;
+                //     border: 3px solid transparent;
+                //     border-bottom: 5px solid #333;
+                //     right: 2px;
+                //     top: 3px;
+                // }
             }
 
             .fixed2 {
