@@ -34,6 +34,7 @@ import logo_d from '../images/logo-d.png';
 import telegram from '../images/telegram.svg';
 import twitter from '../images/twitter.svg';
 import lock from '../images/lock.svg';
+import medium from '../images/medium.svg';
 
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
@@ -76,7 +77,8 @@ export default class Home extends React.Component {
             data_is_ok: false,
             is_btn_enable: true,
             pageNumber: 1,
-            pageSize: 15
+            pageSize: 15,
+            cur_language: navigator.language === 'zh-CN' ? '中文' : 'English'
         }
 
         this.new_web3 = window.new_web3 = new Web3(Web3.givenProvider || null);
@@ -164,7 +166,7 @@ export default class Home extends React.Component {
 
     render() {
         return (
-            <IntlProvider locale={'en'} messages={navigator.language === 'zh-CN' ? zh_CN : en_US} >
+            <IntlProvider locale={'en'} messages={this.state.cur_language === '中文' ? zh_CN : en_US} >
                 <React.Fragment>
                     <div className='top'>
                         <div className='top-left'>
@@ -199,10 +201,6 @@ export default class Home extends React.Component {
 
                     <div className='main-body'>
                         <div className='main-body-left'>
-                            {/* <div className=''>
-                                <span>History</span>
-                                <span>History</span>
-                            </div> */}
                             <div className='main-body-list'>
                                 <table>
                                     <thead>
@@ -467,10 +465,34 @@ export default class Home extends React.Component {
                                 rel="noopener noreferrer"
                             ><img src={telegram} alt='' /></a>
                             <a
-                                href='https://twitter.com/dForcenet'
+                                href='https://medium.com/dforcenet'
+                                target='_blank'
+                                rel="noopener noreferrer"
+                            ><img src={medium} alt='' /></a>
+                            <a
+                                href='https://twitter.com/LendfMe'
                                 target='_blank'
                                 rel="noopener noreferrer"
                             ><img src={twitter} alt='' /></a>
+                        </div>
+
+                        <div className='footer-right'>
+                            <div className='footer-right-fixed'>
+                                <div className='fixed1' onClick={() => { this.setState({ show_language: !this.state.show_language }) }}>
+                                    {
+                                        this.state.cur_language
+                                    }
+                                </div>
+                                {
+                                    this.state.show_language &&
+                                    <div className='fixed2'>
+                                        <ul>
+                                            <li onClick={() => { this.setState({ show_language: false, cur_language: '中文' }) }}>{'中文'}</li>
+                                            <li onClick={() => { this.setState({ show_language: false, cur_language: 'English' }) }}>{'English'}</li>
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
                         </div>
                         <div className='clear'></div>
                     </div>
