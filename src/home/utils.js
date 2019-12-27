@@ -567,3 +567,15 @@ export const format_num_K = (str_num) => {
 }
 
 
+export const to_ethscan_with_account = (that, account) => {
+    var url;
+
+    if (that.state.net_type === 'main') {
+        url = 'https://etherscan.io/address/' + account
+    } else if (that.state.net_type === 'rinkeby') {
+        url = 'https://rinkeby.etherscan.io/address/' + account
+    }
+
+    window.open(url, "_blank");
+}
+

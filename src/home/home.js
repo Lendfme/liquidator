@@ -21,7 +21,7 @@ import {
     click_max,
     format_bn,
     handle_approve,
-    calc_balance_to_USD,
+    to_ethscan_with_account,
     i_want_received_token,
     i_want_send_token,
     change_page,
@@ -187,7 +187,7 @@ export default class Home extends React.Component {
                                         <span className={'spot ' + this.state.net_type}></span>
                                     </div>
                                     <div className='clear'></div>
-                                    <div className='account'>
+                                    <div className='account' onClick={() => { to_ethscan_with_account(this, this.state.my_account) }}>
                                         {this.state.my_account.slice(0, 6) + '...' + this.state.my_account.slice(-6)}
                                     </div>
                                 </div>
@@ -338,7 +338,7 @@ export default class Home extends React.Component {
                             <div className='main-body-details'>
                                 <div className='account'>
                                     <span className='account-title'><FormattedMessage id='Account' />:</span>
-                                    <span className='account-address'>
+                                    <span className='account-address' onClick={() => { to_ethscan_with_account(this, this.state.data[this.state.index].address) }}>
                                         {this.state.data[this.state.index].address}
                                     </span>
                                 </div>
