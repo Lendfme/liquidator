@@ -99,41 +99,6 @@ export const get_list_data = (that, num) => {
 }
 
 
-// export const get_list_data_p = (that, num) => {
-//     that.setState({ data_is_ok: false });
-//     let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
-
-//     fetch(list_api)
-//         .then((res) => { return res.text() })
-//         .then((data) => {
-//             if (data) {
-//                 data = JSON.parse(data);
-//                 var arrList = data.accounts;
-
-//                 for (var i = 0; i < arrList.length; i++) {
-//                     arrList[i].key = i;
-//                     arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
-//                     arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
-//                     arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
-//                 }
-
-//                 console.log(arrList);
-//                 that.setState({
-//                     data: arrList,
-//                     data_is_ok: true,
-//                     totalSize: data.request.totalSize,
-//                     i_want_send: arrList[0].borrow[0].symbol,
-//                     i_want_received: arrList[0].supply[0].symbol,
-//                     pageNumber: data.request.pageNumber,
-//                     totalPageNumber: data.request.totalPageNumber
-//                 })
-
-//                 console.log(data);
-//             }
-//         })
-// }
-
-
 export const get_markets = () => {
     let markets_api = 'https://api.lendf.me/v1/info?data=markets';
 
@@ -582,4 +547,23 @@ export const get_main_data_timer = (that) => {
             }
         })
 }
+
+
+
+export const format_num_K = (str_num) => {
+    var reg = /\d{1,3}(?=(\d{3})+$)/g;
+
+    if (str_num.indexOf('.') > 0) {
+        var part_a = str_num.split('.')[0];
+        var part_b = str_num.split('.')[1];
+
+        part_a = (part_a + '').replace(reg, '$&,');
+
+        return part_a + '.' + part_b;
+    } else {
+        str_num = (str_num + '').replace(reg, '$&,');
+        return str_num;
+    }
+}
+
 

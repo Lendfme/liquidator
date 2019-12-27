@@ -25,7 +25,8 @@ import {
     i_want_received_token,
     i_want_send_token,
     change_page,
-    get_main_data_timer
+    get_main_data_timer,
+    format_num_K
 } from './utils';
 
 import logo from '../images/logo.svg';
@@ -198,6 +199,10 @@ export default class Home extends React.Component {
 
                     <div className='main-body'>
                         <div className='main-body-left'>
+                            {/* <div className=''>
+                                <span>History</span>
+                                <span>History</span>
+                            </div> */}
                             <div className='main-body-list'>
                                 <table>
                                     <thead>
@@ -218,10 +223,10 @@ export default class Home extends React.Component {
                                                         onClick={() => { handle_list_click(this, item.key) }}
                                                         className={this.state.index === item.key ? 'active' : ''}
                                                     >
-                                                        <td>{format_Shortfall(item.shortfallWeth)}</td>
+                                                        <td>{format_num_K(format_Shortfall(item.shortfallWeth))}</td>
                                                         <td>{item.address.slice(0, 6) + '...' + item.address.slice(-4)}</td>
-                                                        <td>{item.Supply}</td>
-                                                        <td>{item.Borrow}</td>
+                                                        <td>{format_num_K(item.Supply)}</td>
+                                                        <td>{format_num_K(item.Borrow)}</td>
                                                         <td>{item.collateralRate}</td>
                                                     </tr>
                                                 )
@@ -245,20 +250,22 @@ export default class Home extends React.Component {
 
                         <div className='main-body-right'>
                             <div className='main-body-balance'>
-                                {/* <h3>Wallet Balances</h3> */}
                                 <table>
                                     <thead>
                                         <tr>
                                             <th className='th-1'><FormattedMessage id='Asset' /></th>
                                             <th className='th-2'><FormattedMessage id='Balance' /></th>
-                                            {/* <th className='th-3'>USD</th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
                                             <td className='td-1'>{'ETH'}</td>
-                                            <td className='td-2'>{this.state.my_eth_balance ? format_bn(this.state.my_eth_balance, 18, 2) : '0'}</td>
-                                            {/* <td className='td-3'>{'$'}</td> */}
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_eth_balance ?
+                                                        format_num_K(format_bn(this.state.my_eth_balance, 18, 2)) : '0'
+                                                }
+                                            </td>
                                         </tr>
 
                                         <tr>
@@ -269,8 +276,12 @@ export default class Home extends React.Component {
                                                     <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WETH, address[this.state.net_type]['liquidator'], 'weth') }} />
                                                 }
                                             </td>
-                                            <td className='td-2'>{this.state.my_weth_balance ? format_bn(this.state.my_weth_balance, 18, 2) : '0'}</td>
-                                            {/* <td className='td-3'>{'$'}</td> */}
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_weth_balance ?
+                                                        format_num_K(format_bn(this.state.my_weth_balance, 18, 2)) : '0'
+                                                }
+                                            </td>
                                         </tr>
 
                                         <tr>
@@ -281,8 +292,12 @@ export default class Home extends React.Component {
                                                     <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDx, address[this.state.net_type]['liquidator'], 'usdx') }} />
                                                 }
                                             </td>
-                                            <td className='td-2'>{this.state.my_usdx_balance ? format_bn(this.state.my_usdx_balance, 18, 2) : '0'}</td>
-                                            {/* <td className='td-3'>{'$'}</td> */}
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_usdx_balance ?
+                                                        format_num_K(format_bn(this.state.my_usdx_balance, 18, 2)) : '0'
+                                                }
+                                            </td>
                                         </tr>
 
                                         <tr>
@@ -293,8 +308,12 @@ export default class Home extends React.Component {
                                                     <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDT, address[this.state.net_type]['liquidator'], 'usdt') }} />
                                                 }
                                             </td>
-                                            <td className='td-2'>{this.state.my_usdt_balance ? format_bn(this.state.my_usdt_balance, 6, 2) : '0'}</td>
-                                            {/* <td className='td-3'>{'$'}</td> */}
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_usdt_balance ?
+                                                        format_num_K(format_bn(this.state.my_usdt_balance, 6, 2)) : '0'
+                                                }
+                                            </td>
                                         </tr>
 
                                         <tr>
@@ -305,15 +324,18 @@ export default class Home extends React.Component {
                                                     <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.imBTC, address[this.state.net_type]['liquidator'], 'imbtc') }} />
                                                 }
                                             </td>
-                                            <td className='td-2'>{this.state.my_imbtc_balance ? format_bn(this.state.my_imbtc_balance, 8, 2) : '0'}</td>
-                                            {/* <td className='td-3'>{'$'}</td> */}
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_imbtc_balance ?
+                                                        format_num_K(format_bn(this.state.my_imbtc_balance, 8, 2)) : '0'
+                                                }
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
                             <div className='main-body-details'>
-                                {/* <h3>Liquidation</h3> */}
                                 <div className='account'>
                                     <span className='account-title'><FormattedMessage id='Account' />:</span>
                                     <span className='account-address'>
@@ -339,7 +361,7 @@ export default class Home extends React.Component {
                                                             className={supply_item.symbol === this.state.i_want_received ? 'active' : ''}
                                                         >
                                                             <td>{supply_item.symbol}</td>
-                                                            <td>{format_Shortfall(supply_item.amount)}</td>
+                                                            <td>{format_num_K(format_Shortfall(supply_item.amount))}</td>
                                                         </tr>
                                                     )
                                                 })
@@ -369,11 +391,11 @@ export default class Home extends React.Component {
                                                             className={borrow_item.symbol === this.state.i_want_send ? 'active' : ''}
                                                         >
                                                             <td>{borrow_item.symbol}</td>
-                                                            <td>{format_Shortfall(borrow_item.amount)}</td>
+                                                            <td>{format_num_K(format_Shortfall(borrow_item.amount))}</td>
                                                             <td className='escpecil'>
                                                                 {
                                                                     borrow_item.symbol === this.state.i_want_send && this.state.max_liquidate_amount ?
-                                                                        format_Shortfall(this.state.max_liquidate_amount_show) : ''
+                                                                        format_num_K(format_Shortfall(this.state.max_liquidate_amount_show)) : ''
                                                                 }
                                                             </td>
                                                         </tr>
