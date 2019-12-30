@@ -291,6 +291,16 @@ export const input_chang = (that, value) => {
         amount_to_liquidate: value,
         i_will_liquidate_max: false,
         is_btn_enable: true,
+    }, () => {
+        if (Number(that.state.amount_to_liquidate) === 0) {
+            that.setState({
+                is_btn_enable: false
+            })
+        } else {
+            that.setState({
+                is_btn_enable: true
+            })
+        }
     })
 }
 

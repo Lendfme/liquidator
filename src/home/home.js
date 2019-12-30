@@ -451,8 +451,16 @@ export default class Home extends React.Component {
                                             <Button
                                                 loading={this.state.loading}
                                                 onClick={() => { click_liquidate(this) }}
-                                                className={!this.state.is_btn_enable || this.state.liquidator_btn_disabled ? 'disable-button' : null}
-                                                disabled={this.state.liquidator_btn_disabled || this.state.data[this.state.index].address === this.state.my_account ? true : false}
+                                                className={
+                                                    !this.state.is_btn_enable ||
+                                                        this.state.liquidator_btn_disabled ||
+                                                        this.state.data[this.state.index].address === this.state.my_account ?
+                                                        'disable-button' : null
+                                                }
+                                                disabled={
+                                                    this.state.liquidator_btn_disabled || this.state.data[this.state.index].address === this.state.my_account ?
+                                                        true : false
+                                                }
                                             >
                                                 {
                                                     this.state.loading ?
