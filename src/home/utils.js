@@ -135,7 +135,7 @@ export const handle_list_click = (that, key) => {
         var assetBorrow = that.state.data[key].borrow[0].asset;
         var assetCollateral = that.state.data[key].supply[0].asset;
 
-        var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
@@ -426,7 +426,7 @@ export const i_want_received_token = (that, item) => {
         var targetAccount = that.state.data[that.state.index].address;
         var assetBorrow = that.state.i_want_send_address;
         var assetCollateral = that.state.i_want_received_address;
-        var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
@@ -455,7 +455,7 @@ export const i_want_send_token = (that, item) => {
         var targetAccount = that.state.data[that.state.index].address;
         var assetBorrow = that.state.i_want_send_address;
         var assetCollateral = that.state.i_want_received_address;
-        var get_max_api = 'https://test.lendf.me/v1/liquidate?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
