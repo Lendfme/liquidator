@@ -4,7 +4,6 @@ let url_map = require('../ABIs/url_map.json');
 export const get_balance = (that) => {
     that.state.USDx.methods.balanceOf(that.state.my_account).call((err, res_usdx_balance) => {
         that.setState({ my_usdx_balance: res_usdx_balance });
-        // console.log(that.bn(that.state.my_eth_balance).div(that.state.usdx_price));
     })
 
     that.state.WETH.methods.balanceOf(that.state.my_account).call((err, res_weth_balance) => {
@@ -15,13 +14,13 @@ export const get_balance = (that) => {
         that.setState({ my_usdt_balance: res_usdt_balance });
     })
 
-    that.new_web3.eth.getBalance(that.state.my_account, (err, res_eth_balance) => {
-        that.setState({ my_eth_balance: res_eth_balance });
-    });
-
     that.state.imBTC.methods.balanceOf(that.state.my_account).call((err, res_imbtc_balance) => {
         that.setState({ my_imbtc_balance: res_imbtc_balance });
     })
+
+    that.new_web3.eth.getBalance(that.state.my_account, (err, res_eth_balance) => {
+        that.setState({ my_eth_balance: res_eth_balance });
+    });
 }
 
 
@@ -73,8 +72,6 @@ export const get_list_data = (that, num) => {
 
                 for (var i = 0; i < arrList.length; i++) {
                     arrList[i].key = i;
-                    // arrList[i].Supply = format_Shortfall(arrList[i].totalSupplyUSD);
-                    // arrList[i].Borrow = format_Shortfall(arrList[i].totalBorrowUSD);
                     arrList[i].Supply = Number(arrList[i].totalSupplyUSD).toFixed(2);
                     arrList[i].Borrow = Number(arrList[i].totalBorrowUSD).toFixed(2);
                     arrList[i].collateralRate = format_persent(arrList[i].collateralRate);
@@ -95,19 +92,6 @@ export const get_list_data = (that, num) => {
 
                 console.log(data);
             }
-        })
-}
-
-
-export const get_markets = () => {
-    let markets_api = 'https://api.lendf.me/v1/info?data=markets';
-
-    fetch(markets_api)
-        .then((res) => { return res.text() })
-        .then((data) => {
-            // console.log(JSON.parse(data))
-            data = JSON.parse(data);
-            this.setState({ markets: data })
         })
 }
 
@@ -411,6 +395,16 @@ export const click_max = (that) => {
         amount_to_liquidate: to_show,
         i_will_liquidate_max: true
     })
+
+    if (that.bn(that.state.max_liquidate_amount).lte(that.bn('0'))) {
+        that.setState({
+            liquidator_btn_disabled: true
+        })
+    } else {
+        that.setState({
+            liquidator_btn_disabled: false
+        })
+    }
 }
 
 
@@ -473,15 +467,20 @@ export const i_want_send_token = (that, item) => {
 
 
 export const change_page = (that, page, pageSize, key) => {
-    that.setState({ data_is_ok: false });
-    var list_api;
+    that.setState({
+        data_is_ok: false,
+        page_changeing: true
+    });
 
+    var list_api;
     if (Number(that.state.totalPageNumber) === Number(page)) {
-        var last_num = that.state.totalSize % page;
+        var last_num = that.state.totalSize % that.state.pageSize;
         list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=' + last_num;
     } else {
         list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
     }
+
+    console.log(list_api);
 
     fetch(list_api)
         .then((res) => { return res.text() })
@@ -507,7 +506,8 @@ export const change_page = (that, page, pageSize, key) => {
                     i_want_send: arrList[0].borrow[0].symbol,
                     i_want_received: arrList[0].supply[0].symbol,
                     pageNumber: data.request.pageNumber,
-                    totalPageNumber: data.request.totalPageNumber
+                    totalPageNumber: data.request.totalPageNumber,
+                    page_changeing: false
                 }, () => {
                     handle_list_click(that, key || 0);
                 })
@@ -520,6 +520,11 @@ export const change_page = (that, page, pageSize, key) => {
 
 
 export const get_main_data_timer = (that) => {
+    if (that.state.page_changeing) {
+        console.log('u r changeing page.')
+        return false;
+    }
+
     var list_api;
     if (Number(that.state.totalPageNumber) === Number(that.state.pageNumber) && (that.state.totalSize % that.state.pageNumber !== 0)) {
         var last_num = that.state.totalSize % that.state.pageNumber;
@@ -533,6 +538,11 @@ export const get_main_data_timer = (that) => {
         .then((res) => { return res.text() })
         .then((data) => {
             if (data) {
+                if (that.state.page_changeing) {
+                    console.log('u r changeing page.')
+                    return false;
+                }
+
                 data = JSON.parse(data);
                 var arrList = data.accounts;
                 // console.log(arrList);

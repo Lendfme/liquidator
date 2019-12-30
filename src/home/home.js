@@ -138,7 +138,13 @@ export default class Home extends React.Component {
 
         this.update_list_timer = setInterval(() => {
             get_balance(this);
-            get_main_data_timer(this);
+
+            if (this.state.page_changeing) {
+                console.log('u r changeing page.')
+                return false;
+            } else {
+                get_main_data_timer(this);
+            }
         }, 1000 * 15)
     }
 
@@ -185,7 +191,12 @@ export default class Home extends React.Component {
                                 this.state.my_account &&
                                 <div className='top-right-account'>
                                     <div className='net'>
-                                        <span className='net-name'>{this.state.net_type.substring(0, 1).toUpperCase() + this.state.net_type.substring(1)}</span>
+                                        <span className='net-name'>
+                                            {
+                                                this.state.net_type &&
+                                                this.state.net_type.substring(0, 1).toUpperCase() + this.state.net_type.substring(1)
+                                            }
+                                        </span>
                                         <span className={'spot ' + this.state.net_type}></span>
                                     </div>
                                     <div className='clear'></div>
@@ -428,7 +439,8 @@ export default class Home extends React.Component {
                                             <Button
                                                 loading={this.state.loading}
                                                 onClick={() => { click_liquidate(this) }}
-                                                className={this.state.is_btn_enable ? null : 'disable-button'}
+                                                className={!this.state.is_btn_enable || this.state.liquidator_btn_disabled ? 'disable-button' : null}
+                                                disabled={this.state.liquidator_btn_disabled || this.state.data[this.state.index].address === this.state.my_account ? true : false}
                                             >
                                                 {
                                                     this.state.loading ?
