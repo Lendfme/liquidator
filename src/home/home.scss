@@ -80,6 +80,19 @@
                 .net-name {
                     float: right;
                 }
+
+                .net-name-wrong {
+                    color: #F69726;
+                }
+
+                .wrong-wrap {
+                    position: relative;
+
+                    img {
+                        width: 8px;
+                        margin-right: 5px;
+                    }
+                }
             }
 
             .account {

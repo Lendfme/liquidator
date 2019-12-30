@@ -35,6 +35,7 @@ import telegram from '../images/telegram.svg';
 import twitter from '../images/twitter.svg';
 import lock from '../images/lock.svg';
 import medium from '../images/medium.svg';
+import wrong from '../images/wrong.svg';
 
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
@@ -191,13 +192,22 @@ export default class Home extends React.Component {
                                 this.state.my_account &&
                                 <div className='top-right-account'>
                                     <div className='net'>
-                                        <span className='net-name'>
-                                            {
-                                                this.state.net_type &&
-                                                this.state.net_type.substring(0, 1).toUpperCase() + this.state.net_type.substring(1)
-                                            }
-                                        </span>
-                                        <span className={'spot ' + this.state.net_type}></span>
+                                        {
+                                            (this.state.net_type && this.state.net_type === 'main') &&
+                                            <>
+                                                <span className='net-name'>{'Main'}</span>
+                                                <span className={'spot ' + this.state.net_type}></span>
+                                            </>
+                                        }
+                                        {
+                                            (this.state.net_type && this.state.net_type !== 'main') &&
+                                            <>
+                                                <span className='net-name net-name-wrong'>{'Wrong Network'}</span>
+                                                <span className={'wrong-wrap'}>
+                                                    <img src={wrong} alt='' />
+                                                </span>
+                                            </>
+                                        }
                                     </div>
                                     <div className='clear'></div>
                                     <div className='account' onClick={() => { to_ethscan_with_account(this, this.state.my_account) }}>
