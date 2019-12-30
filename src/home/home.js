@@ -103,7 +103,8 @@ export default class Home extends React.Component {
                         USDT: USDT,
                         imBTC: imBTC,
                         Liquidate: Liquidate,
-                        my_account: res_accounts[0]
+                        my_account: res_accounts[0],
+                        i_am_ready: true
                     }, () => {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
@@ -129,22 +130,23 @@ export default class Home extends React.Component {
                     my_account: accounts[0]
                 }, () => {
                     console.log('connected: ', this.state.my_account);
-                    get_allowance(this, address[this.state.net_type]['liquidator']);
-                    get_list_data(this, 1);
-                    get_balance(this);
+                    if (this.state.net_type) {
+                        get_allowance(this, address[this.state.net_type]['liquidator']);
+                        get_list_data(this, 1);
+                        get_balance(this);
+                    }
                 })
             });
         }
 
 
         this.update_list_timer = setInterval(() => {
-            get_balance(this);
-
-            if (this.state.page_changeing) {
+            if (this.state.page_changeing || !this.state.i_am_ready) {
                 console.log('u r changeing page.')
                 return false;
             } else {
                 get_main_data_timer(this);
+                get_balance(this);
             }
         }, 1000 * 15)
     }

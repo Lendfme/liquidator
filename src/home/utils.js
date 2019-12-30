@@ -414,7 +414,7 @@ export const i_want_received_token = (that, item) => {
         max_liquidate_amount_show: '',
         i_want_received: item.symbol,
         i_want_received_address: item.asset,
-        now_new_decimals: item.decimal
+        // now_new_decimals: item.decimal
     }, () => {
         // console.log(that.state.choosen_item);
         var targetAccount = that.state.data[that.state.index].address;
