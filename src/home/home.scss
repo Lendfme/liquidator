@@ -55,6 +55,34 @@
                 // background: red;
                 position: relative;
 
+
+
+                .wrong-wrap {
+                    position: relative;
+
+                    img {
+                        width: 8px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            .account {
+                // padding-top: 5px;
+                background: rgba(67, 73, 118, 1);
+                color: #fff;
+                float: right;
+                height: 35px;
+                line-height: 35px;
+                padding-left: 10px;
+                padding-right: 10px;
+                border-radius: 3px;
+
+                &:hover {
+                    color: #6852FE;
+                    cursor: pointer;
+                }
+
                 .spot {
                     display: block;
                     // position: absolute;
@@ -64,9 +92,9 @@
                     height: 7px;
                     border-radius: 50%;
                     background: #666;
-                    float: right;
+                    float: left;
                     margin-right: 7px;
-                    margin-top: 5px;
+                    margin-top: 13px;
 
                     &.main {
                         background: rgba(39, 170, 160, 1);
@@ -84,24 +112,6 @@
                 .net-name-wrong {
                     color: #F69726;
                 }
-
-                .wrong-wrap {
-                    position: relative;
-
-                    img {
-                        width: 8px;
-                        margin-right: 5px;
-                    }
-                }
-            }
-
-            .account {
-                padding-top: 5px;
-
-                &:hover {
-                    color: #6852FE;
-                    cursor: pointer;
-                }
             }
         }
 
@@ -118,6 +128,19 @@
             .wrong-wrap {
                 margin-right: 5px;
 
+                img {
+                    width: 10px;
+                }
+            }
+        }
+
+        .Platform {
+            font-size: 16px;
+            font-weight: 500;
+            color: rgba(67, 73, 118, 1);
+            cursor: pointer;
+
+            .Platform-img {
                 img {
                     width: 10px;
                 }

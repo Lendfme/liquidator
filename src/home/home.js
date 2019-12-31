@@ -37,6 +37,7 @@ import lock from '../images/lock.svg';
 import medium from '../images/medium.svg';
 import wrong from '../images/wrong.svg';
 import up from '../images/up.svg';
+import down from '../images/down.svg';
 
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
@@ -201,16 +202,19 @@ export default class Home extends React.Component {
                             {
                                 (this.state.my_account && this.state.net_type === 'main') &&
                                 <div className='top-right-account'>
-                                    <div className='net'>
-                                        <span className='net-name'>{'Main'}</span>
-                                        <span className={'spot ' + this.state.net_type}></span>
-                                    </div>
-                                    <div className='clear'></div>
                                     <div className='account' onClick={() => { to_ethscan_with_account(this, this.state.my_account) }}>
-                                        {this.state.my_account.slice(0, 6) + '...' + this.state.my_account.slice(-6)}
+                                        <span className={'spot ' + this.state.net_type}></span>
+                                        <span className={'account-address'}>
+                                            {this.state.my_account.slice(0, 6) + '...' + this.state.my_account.slice(-4)}
+                                        </span>
                                     </div>
                                 </div>
                             }
+
+                            {/* <div className='Platform'>
+                                <span className='Platform-title'>dForce Platform</span>
+                                <span className='Platform-img'><img src={down} alt='' /></span>
+                            </div> */}
                         </div>
                         <div className='clear'></div>
                     </div>
