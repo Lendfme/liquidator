@@ -495,7 +495,7 @@ export const change_page = (that, page, pageSize, key) => {
     var list_api;
     if (Number(that.state.totalPageNumber) === Number(page)) {
         var last_num = that.state.totalSize % that.state.pageSize;
-        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=' + last_num;
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
     } else {
         list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
     }
@@ -548,7 +548,7 @@ export const get_main_data_timer = (that) => {
     var list_api;
     if (Number(that.state.totalPageNumber) === Number(that.state.pageNumber) && (that.state.totalSize % that.state.pageNumber !== 0)) {
         var last_num = that.state.totalSize % that.state.pageNumber;
-        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=' + last_num;
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
     } else {
         list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
     }
@@ -623,7 +623,7 @@ export const get_history = (that) => {
     var history_api;
     if (Number(that.state.totalPageNumber_history) === Number(that.state.pageNumber_history) && (that.state.totalSize_history % that.state.pageNumber_history !== 0)) {
         var last_num = that.state.totalSize_history % that.state.pageNumber_history;
-        history_api = url_map[that.state.net_type]['history_url'] + '?pageNumber=' + that.state.pageNumber_history + '&pageSize=' + last_num;
+        history_api = url_map[that.state.net_type]['history_url'] + '?pageNumber=' + that.state.pageNumber_history + '&pageSize=15';
     } else {
         history_api = url_map[that.state.net_type]['history_url'] + '?pageNumber=' + that.state.pageNumber_history + '&pageSize=15';
     }
