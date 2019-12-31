@@ -478,6 +478,16 @@ export const i_want_send_token = (that, item) => {
 
 export const change_page = (that, page, pageSize, key) => {
     that.setState({
+        data: [
+            {
+                key: 0,
+                shortfallWeth: '0.00',
+                address: '...',
+                Supply: '0.00',
+                Borrow: '0.00',
+                collateralRate: '0.00%',
+            }
+        ],
         data_is_ok: false,
         page_changeing: true
     });
