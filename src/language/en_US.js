@@ -13,6 +13,14 @@ const en_US = {
     MAX_Liquidation: 'MAX Liquidation',
     RequestedAmountClose: 'RequestedAmountClose',
     LIQUIDATE: 'LIQUIDATE',
-    SUBMITTING: ' SUBMITTING…'
+    SUBMITTING: ' SUBMITTING…',
+    TX_Hash: 'TX Hash',
+    Target_Account: 'Target Account',
+    Target_Asset: 'Target Asset',
+    Repay_Amount: 'Repay Amount',
+    Liquidated_Asset: 'Liquidated Asset',
+    Liquidated_Amount: 'Liquidated Amount',
+    Resource: 'Resource',
+    Products: 'Products'
 }
 export default en_US;

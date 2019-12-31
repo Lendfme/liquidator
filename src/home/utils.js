@@ -604,3 +604,40 @@ export const to_ethscan_with_account = (that, account) => {
     window.open(url, "_blank");
 }
 
+export const get_history = (that) => {
+    // if (that.state.page_changeing) {
+    //     console.log('u r changeing page.')
+    //     return false;
+    // }
+
+    var history_api;
+    if (Number(that.state.totalPageNumber_history) === Number(that.state.pageNumber_history) && (that.state.totalSize_history % that.state.pageNumber_history !== 0)) {
+        var last_num = that.state.totalSize_history % that.state.pageNumber_history;
+        history_api = url_map[that.state.net_type]['history_url'] + '?pageNumber=' + that.state.pageNumber_history + '&pageSize=' + last_num;
+    } else {
+        history_api = url_map[that.state.net_type]['history_url'] + '?pageNumber=' + that.state.pageNumber_history + '&pageSize=15';
+    }
+    console.log(history_api);
+
+    fetch(history_api)
+        .then((res) => { return res.text() })
+        .then((data) => {
+            if (data) {
+                // if (that.state.page_changeing) {
+                //     console.log('u r changeing page.')
+                //     return false;
+                // }
+
+                data = JSON.parse(data);
+                var history = data.data;
+                // console.log(arrList);
+
+                that.setState({
+                    history: history,
+                    totalSize_history: data.request.totalSize,
+                    pageNumber_history: data.request.pageNumber,
+                    totalPageNumber_history: data.request.totalPageNumber
+                })
+            }
+        })
+}

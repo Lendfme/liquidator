@@ -13,6 +13,14 @@ const zh_CN = {
     MAX_Liquidation: '最大清算量',
     RequestedAmountClose: '被清算资产',
     LIQUIDATE: '清算',
-    SUBMITTING: ' 清算中…'
+    SUBMITTING: ' 清算中…',
+    TX_Hash: '交易Hash',
+    Target_Account: '被清算账户',
+    Target_Asset: '负债资产',
+    Repay_Amount: '偿还数量',
+    Liquidated_Asset: '被清算资产',
+    Liquidated_Amount: '被清算数量',
+    Resource: '资源',
+    Products: '产品'
 }
 export default zh_CN;

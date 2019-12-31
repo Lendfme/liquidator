@@ -36,6 +36,7 @@ import twitter from '../images/twitter.svg';
 import lock from '../images/lock.svg';
 import medium from '../images/medium.svg';
 import wrong from '../images/wrong.svg';
+import up from '../images/up.svg';
 
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
@@ -179,37 +180,30 @@ export default class Home extends React.Component {
                 <React.Fragment>
                     <div className='top'>
                         <div className='top-left'>
-                            <img src={logo_d} alt='' />
-                        </div>
-                        <div className='top-center'>
                             <img src={logo} alt='' />
                         </div>
                         <div className='top-right'>
                             {
-                                !this.state.my_account && <div className='top-right-btn'>
+                                !this.state.my_account &&
+                                <div className='top-right-btn'>
                                     <FormattedMessage id='Connect' />
                                 </div>
                             }
                             {
-                                this.state.my_account &&
+                                (this.state.net_type && this.state.net_type !== 'main') &&
+                                <div className='Wrong'>
+                                    <span className={'wrong-wrap'}>
+                                        <img src={wrong} alt='' />
+                                    </span>
+                                    <span className='net-name net-name-wrong'>{'Wrong Network'}</span>
+                                </div>
+                            }
+                            {
+                                (this.state.my_account && this.state.net_type === 'main') &&
                                 <div className='top-right-account'>
                                     <div className='net'>
-                                        {
-                                            (this.state.net_type && this.state.net_type === 'main') &&
-                                            <>
-                                                <span className='net-name'>{'Main'}</span>
-                                                <span className={'spot ' + this.state.net_type}></span>
-                                            </>
-                                        }
-                                        {
-                                            (this.state.net_type && this.state.net_type !== 'main') &&
-                                            <>
-                                                <span className='net-name net-name-wrong'>{'Wrong Network'}</span>
-                                                <span className={'wrong-wrap'}>
-                                                    <img src={wrong} alt='' />
-                                                </span>
-                                            </>
-                                        }
+                                        <span className='net-name'>{'Main'}</span>
+                                        <span className={'spot ' + this.state.net_type}></span>
                                     </div>
                                     <div className='clear'></div>
                                     <div className='account' onClick={() => { to_ethscan_with_account(this, this.state.my_account) }}>
@@ -224,6 +218,42 @@ export default class Home extends React.Component {
 
                     <div className='main-body'>
                         <div className='main-body-left'>
+                            {/* <div className='main-body-list main-body-list-history'>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th><FormattedMessage id='TX_Hash' /></th>
+                                            <th><FormattedMessage id='Target_Account' /></th>
+                                            <th><FormattedMessage id='Target_Asset' /></th>
+                                            <th><FormattedMessage id='Repay_Amount' /></th>
+                                            <th><FormattedMessage id='Liquidated_Asset' /></th>
+                                            <th><FormattedMessage id='Liquidated_Amount' /></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            this.state.history &&
+                                            this.state.history.map(item => {
+                                                return (
+                                                    <tr
+                                                        key={item.key}
+                                                        onClick={() => { handle_list_click(this, item.key) }}
+                                                        className={this.state.index === item.key ? 'active' : ''}
+                                                    >
+                                                        <td>{format_num_K(format_Shortfall(item.shortfallWeth))}</td>
+                                                        <td>{item.address.slice(0, 6) + '...' + item.address.slice(-4)}</td>
+                                                        <td>{format_num_K(item.Supply)}</td>
+                                                        <td>{format_num_K(item.Borrow)}</td>
+                                                        <td>{item.collateralRate}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                        }
+                                    </tbody>
+                                </table>
+                            </div> */}
+
+
                             <div className='main-body-list'>
                                 <table>
                                     <thead>
@@ -478,54 +508,58 @@ export default class Home extends React.Component {
 
                     <div className='footer'>
                         <div className='footer-left'>
-                            <a
-                                href='https://github.com/Lendfme/liquidator'
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            >GitHub</a>
-                            <a
-                                href='https://docs.lendf.me/faq'
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            >FAQ</a>
+                            <div className='footer-left-res'>
+                                <span className='title'>
+                                    <FormattedMessage id='Resource' />
+                                </span>
+                                <span className='content'>
+                                    <a href='https://github.com/Lendfme/liquidator' target='_blank' rel="noopener noreferrer">GitHub</a>
+                                </span>
+                                <span className='content'>
+                                    <a href='https://docs.lendf.me/faq' target='_blank' rel="noopener noreferrer">FAQ</a>
+                                </span>
+                            </div>
+
+                            <div className='footer-left-pro'>
+                                <span className='title'>
+                                    <FormattedMessage id='Products' />
+                                </span>
+                                <span className='content'>
+                                    <a href='https://www.lendf.me/' target='_blank' rel="noopener noreferrer">Lendf.me</a>
+                                </span>
+                                <span className='content'>
+                                    <a href='https://markets.lendf.me/' target='_blank' rel="noopener noreferrer">Markets</a>
+                                </span>
+                            </div>
                         </div>
 
                         <div className='footer-right'>
-                            <a
-                                href='https://twitter.com/LendfMe'
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            ><img src={twitter} alt='' /></a>
+                            <a href='https://twitter.com/LendfMe' target='_blank' rel="noopener noreferrer">
+                                <img src={twitter} alt='' />
+                            </a>
+                            <a href='https://medium.com/dforcenet' target='_blank' rel="noopener noreferrer">
+                                <img src={medium} alt='' />
+                            </a>
+                            <a href='https://t.me/dforcenet' target='_blank' rel="noopener noreferrer">
+                                <img src={telegram} alt='' />
+                            </a>
+                            <div className='clear'></div>
 
-                            <a
-                                href='https://medium.com/dforcenet'
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            ><img src={medium} alt='' /></a>
-
-                            <a
-                                href='https://t.me/dforcenet'
-                                target='_blank'
-                                rel="noopener noreferrer"
-                            ><img src={telegram} alt='' /></a>
-                        </div>
-
-                        <div className='footer-right'>
                             <div className='footer-right-fixed'>
-                                <div className='fixed1' onClick={() => { this.setState({ show_language: !this.state.show_language }) }}>
+                                <div className='fixed1'>
                                     {
                                         this.state.cur_language
                                     }
                                 </div>
-                                {
-                                    this.state.show_language &&
-                                    <div className='fixed2'>
-                                        <ul>
-                                            <li onClick={() => { this.setState({ show_language: false, cur_language: '中文' }) }}>{'中文'}</li>
-                                            <li onClick={() => { this.setState({ show_language: false, cur_language: 'English' }) }}>{'English'}</li>
-                                        </ul>
-                                    </div>
-                                }
+                                <span className='fixed-img'>
+                                    <img src={up} alt='' />
+                                </span>
+                                <div className='fixed2'>
+                                    <ul>
+                                        <li onClick={() => { this.setState({ cur_language: '中文' }) }}>{'中文'}</li>
+                                        <li onClick={() => { this.setState({ cur_language: 'English' }) }}>{'English'}</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div className='clear'></div>
