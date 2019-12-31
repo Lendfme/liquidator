@@ -1,10 +1,10 @@
 {
     "main": {
-        "account_list_url": "https://test.lendf.me/v1/account",
-        "liquidate_url": "https://test.lendf.me/v1/liquidate"
+        "account_list_url": "https://api.lendf.me/v1/account",
+        "liquidate_url": "https://api.lendf.me/v1/liquidate"
     },
     "rinkeby": {
-        "account_list_url": "https://test.lendf.me/v1/account",
-        "liquidate_url": "https://test.lendf.me/v1/liquidate"
+        "account_list_url": "https://api.lendf.me/v1/account",
+        "liquidate_url": "https://api.lendf.me/v1/liquidate"
     }
 }
