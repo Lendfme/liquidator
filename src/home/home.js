@@ -26,7 +26,10 @@ import {
     i_want_send_token,
     change_page,
     get_main_data_timer,
-    format_num_K
+    format_num_K,
+    get_history,
+    change_page_history,
+    open_it_onetherscan
 } from './utils';
 
 import logo from '../images/logo.svg';
@@ -38,6 +41,7 @@ import medium from '../images/medium.svg';
 import wrong from '../images/wrong.svg';
 import up from '../images/up.svg';
 import down from '../images/down.svg';
+import back from '../images/back.svg';
 
 let mMarket_abi = require('../ABIs/moneyMarket.json');
 let WETH_abi = require('../ABIs/WETH_ABI.json');
@@ -111,6 +115,7 @@ export default class Home extends React.Component {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
                         get_balance(this);
+                        get_history(this);
 
                         this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
                             console.log('res_usdx_price:', res_usdx_price);
@@ -150,6 +155,8 @@ export default class Home extends React.Component {
                 get_main_data_timer(this);
                 get_balance(this);
             }
+
+            get_history(this);
         }, 1000 * 15)
     }
 
@@ -221,85 +228,113 @@ export default class Home extends React.Component {
 
 
                     <div className='main-body'>
+                        <h3 onClick={() => { this.setState({ show_history: !this.state.show_history }) }} className='h3-switch'>
+                            <img src={back} />
+                            <span>
+                                {
+                                    !this.state.show_history ?
+                                        'History' : 'Liquidation'
+                                }
+                            </span>
+                        </h3>
+
                         <div className='main-body-left'>
-                            {/* <div className='main-body-list main-body-list-history'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th><FormattedMessage id='TX_Hash' /></th>
-                                            <th><FormattedMessage id='Target_Account' /></th>
-                                            <th><FormattedMessage id='Target_Asset' /></th>
-                                            <th><FormattedMessage id='Repay_Amount' /></th>
-                                            <th><FormattedMessage id='Liquidated_Asset' /></th>
-                                            <th><FormattedMessage id='Liquidated_Amount' /></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            this.state.history &&
-                                            this.state.history.map(item => {
-                                                return (
-                                                    <tr
-                                                        key={item.key}
-                                                        onClick={() => { handle_list_click(this, item.key) }}
-                                                        className={this.state.index === item.key ? 'active' : ''}
-                                                    >
-                                                        <td>{format_num_K(format_Shortfall(item.shortfallWeth))}</td>
-                                                        <td>{item.address.slice(0, 6) + '...' + item.address.slice(-4)}</td>
-                                                        <td>{format_num_K(item.Supply)}</td>
-                                                        <td>{format_num_K(item.Borrow)}</td>
-                                                        <td>{item.collateralRate}</td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                    </tbody>
-                                </table>
-                            </div> */}
+                            {
+                                this.state.show_history &&
+                                <>
+                                    <div className='main-body-list main-body-list-history'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='TX_Hash' /></th>
+                                                    <th><FormattedMessage id='Target_Account' /></th>
+                                                    <th><FormattedMessage id='Target_Asset' /></th>
+                                                    <th><FormattedMessage id='Repay_Amount' /></th>
+                                                    <th><FormattedMessage id='Liquidated_Asset' /></th>
+                                                    <th><FormattedMessage id='Liquidated_Amount' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.state.history &&
+                                                    this.state.history.map(item => {
+                                                        return (
+                                                            <tr key={item.transactionHash}>
+                                                                <td onClick={() => { open_it_onetherscan(this, item.transactionHash) }}>
+                                                                    {item.transactionHash.slice(0, 4) + '...' + item.transactionHash.slice(-4)}
+                                                                </td>
+                                                                <td>{item.targetAccount.slice(0, 4) + '...' + item.targetAccount.slice(-4)}</td>
+                                                                <td>{item.assetBorrow.symbol}</td>
+                                                                <td>{format_Shortfall(item.assetBorrow.amountRepaid)}</td>
+                                                                <td>{item.assetCollateral.symbol}</td>
+                                                                <td>{format_Shortfall(item.assetCollateral.amountSeized)}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
 
+                                    <div className='page'>
+                                        <Pagination
+                                            showQuickJumper
+                                            pageSize={this.state.pageSize}
+                                            defaultCurrent={this.state.pageNumber_history}
+                                            total={this.state.totalSize_history ? this.state.totalSize_history : 0}
+                                            onChange={(page, pageSize) => { change_page_history(this, page, pageSize) }}
+                                        />
+                                    </div>
+                                </>
+                            }
 
-                            <div className='main-body-list'>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th><FormattedMessage id='Shortfall' /> (WETH)</th>
-                                            <th><FormattedMessage id='Account' /></th>
-                                            <th><FormattedMessage id='Supply_Balance' />($)</th>
-                                            <th><FormattedMessage id='Borrow_Balance' />($)</th>
-                                            <th><FormattedMessage id='Collateralization_ratio' /></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            this.state.data.map(item => {
-                                                return (
-                                                    <tr
-                                                        key={item.key}
-                                                        onClick={() => { handle_list_click(this, item.key) }}
-                                                        className={this.state.index === item.key ? 'active' : ''}
-                                                    >
-                                                        <td>{format_num_K(format_Shortfall(item.shortfallWeth))}</td>
-                                                        <td>{item.address.slice(0, 6) + '...' + item.address.slice(-4)}</td>
-                                                        <td>{format_num_K(item.Supply)}</td>
-                                                        <td>{format_num_K(item.Borrow)}</td>
-                                                        <td>{item.collateralRate}</td>
-                                                    </tr>
-                                                )
-                                            })
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                            {
+                                !this.state.show_history &&
+                                <>
+                                    <div className='main-body-list'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='Shortfall' /> (WETH)</th>
+                                                    <th><FormattedMessage id='Account' /></th>
+                                                    <th><FormattedMessage id='Supply_Balance' />($)</th>
+                                                    <th><FormattedMessage id='Borrow_Balance' />($)</th>
+                                                    <th><FormattedMessage id='Collateralization_ratio' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.state.data.map(item => {
+                                                        return (
+                                                            <tr
+                                                                key={item.key}
+                                                                onClick={() => { handle_list_click(this, item.key) }}
+                                                                className={this.state.index === item.key ? 'active' : ''}
+                                                            >
+                                                                <td>{format_num_K(format_Shortfall(item.shortfallWeth))}</td>
+                                                                <td>{item.address.slice(0, 4) + '...' + item.address.slice(-4)}</td>
+                                                                <td>{format_num_K(item.Supply)}</td>
+                                                                <td>{format_num_K(item.Borrow)}</td>
+                                                                <td>{item.collateralRate}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
 
-                            <div className='page'>
-                                <Pagination
-                                    showQuickJumper
-                                    pageSize={this.state.pageSize}
-                                    defaultCurrent={this.state.pageNumber}
-                                    total={this.state.totalSize ? this.state.totalSize : 0}
-                                    onChange={(page, pageSize) => { change_page(this, page, pageSize) }}
-                                />
-                            </div>
+                                    <div className='page'>
+                                        <Pagination
+                                            showQuickJumper
+                                            pageSize={this.state.pageSize}
+                                            defaultCurrent={this.state.pageNumber}
+                                            total={this.state.totalSize ? this.state.totalSize : 0}
+                                            onChange={(page, pageSize) => { change_page(this, page, pageSize) }}
+                                        />
+                                    </div>
+                                </>
+                            }
                         </div>
 
 
@@ -390,121 +425,125 @@ export default class Home extends React.Component {
                                 </table>
                             </div>
 
-                            <div className='main-body-details'>
-                                <div className='account'>
-                                    <span className='account-title'><FormattedMessage id='Account' />:</span>
-                                    <span className='account-address' onClick={() => { to_ethscan_with_account(this, this.state.data[this.state.index].address) }}>
-                                        {this.state.data[this.state.index].address}
-                                    </span>
-                                </div>
-                                <div className='supply-table'>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th><FormattedMessage id='Supply' /></th>
-                                                <th><FormattedMessage id='Amount' /></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.state.data[this.state.index].supply &&
-                                                this.state.data[this.state.index].supply.map(supply_item => {
-                                                    return (
-                                                        <tr
-                                                            key={supply_item.asset}
-                                                            onClick={() => { i_want_received_token(this, supply_item) }}
-                                                            className={supply_item.symbol === this.state.i_want_received ? 'active' : ''}
-                                                        >
-                                                            <td>{supply_item.symbol}</td>
-                                                            <td>{format_num_K(format_Shortfall(supply_item.amount))}</td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div className='borrow-table'>
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th><FormattedMessage id='Borrow' /></th>
-                                                <th><FormattedMessage id='Amount' /></th>
-                                                <th className='escpecil'><FormattedMessage id='MAX_Liquidation' /></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                this.state.data[this.state.index].borrow &&
-                                                this.state.data[this.state.index].borrow.map(borrow_item => {
-                                                    return (
-                                                        <tr
-                                                            key={borrow_item.asset}
-                                                            onClick={() => { i_want_send_token(this, borrow_item) }}
-                                                            className={borrow_item.symbol === this.state.i_want_send ? 'active' : ''}
-                                                        >
-                                                            <td>{borrow_item.symbol}</td>
-                                                            <td>{format_num_K(format_Shortfall(borrow_item.amount))}</td>
-                                                            <td className='escpecil'>
-                                                                {
-                                                                    borrow_item.symbol === this.state.i_want_send && this.state.max_liquidate_amount ?
-                                                                        format_num_K(format_Shortfall(this.state.max_liquidate_amount_show)) : ''
-                                                                }
-                                                            </td>
-                                                        </tr>
-                                                    )
-                                                })
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div className='liquidate'>
-                                    <div className='liquidate-title'>
-                                        <span><FormattedMessage id='RequestedAmountClose' /></span>
-                                        <span style={{ color: '#8472FF' }}>
-                                            {
-                                                this.state.i_want_send ?
-                                                    ' (' + this.state.i_want_send + ')' : ''
-                                            }
+                            {
+                                !this.state.show_history &&
+                                <div className='main-body-details'>
+                                    <div className='account'>
+                                        <span className='account-title'><FormattedMessage id='Account' />:</span>
+                                        <span className='account-address' onClick={() => { to_ethscan_with_account(this, this.state.data[this.state.index].address) }}>
+                                            {this.state.data[this.state.index].address}
                                         </span>
                                     </div>
-                                    <div className='liquidate-con'>
-                                        <div className='input-wrap'>
-                                            <Input
-                                                placeholder='number'
-                                                type='number'
-                                                onChange={(e) => { input_chang(this, e.target.value) }}
-                                                value={this.state.amount_to_liquidate}
-                                            />
-                                            <span className='max-tips' onClick={() => { click_max(this) }}>MAX</span>
-                                        </div>
-                                        <div className='button-wrap'>
-                                            <Button
-                                                loading={this.state.loading}
-                                                onClick={() => { click_liquidate(this) }}
-                                                className={
-                                                    !this.state.is_btn_enable ||
-                                                        this.state.liquidator_btn_disabled ||
-                                                        this.state.data[this.state.index].address === this.state.my_account ?
-                                                        'disable-button' : null
-                                                }
-                                                disabled={
-                                                    this.state.liquidator_btn_disabled || this.state.data[this.state.index].address === this.state.my_account ?
-                                                        true : false
-                                                }
-                                            >
+                                    <div className='supply-table'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='Supply' /></th>
+                                                    <th><FormattedMessage id='Amount' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
                                                 {
-                                                    this.state.loading ?
-                                                        <FormattedMessage id='SUBMITTING' /> : <FormattedMessage id='LIQUIDATE' />
+                                                    this.state.data[this.state.index].supply &&
+                                                    this.state.data[this.state.index].supply.map(supply_item => {
+                                                        return (
+                                                            <tr
+                                                                key={supply_item.asset}
+                                                                onClick={() => { i_want_received_token(this, supply_item) }}
+                                                                className={supply_item.symbol === this.state.i_want_received ? 'active' : ''}
+                                                            >
+                                                                <td>{supply_item.symbol}</td>
+                                                                <td>{format_num_K(format_Shortfall(supply_item.amount))}</td>
+                                                            </tr>
+                                                        )
+                                                    })
                                                 }
-                                            </Button>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div className='borrow-table'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='Borrow' /></th>
+                                                    <th><FormattedMessage id='Amount' /></th>
+                                                    <th className='escpecil'><FormattedMessage id='MAX_Liquidation' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.state.data[this.state.index].borrow &&
+                                                    this.state.data[this.state.index].borrow.map(borrow_item => {
+                                                        return (
+                                                            <tr
+                                                                key={borrow_item.asset}
+                                                                onClick={() => { i_want_send_token(this, borrow_item) }}
+                                                                className={borrow_item.symbol === this.state.i_want_send ? 'active' : ''}
+                                                            >
+                                                                <td>{borrow_item.symbol}</td>
+                                                                <td>{format_num_K(format_Shortfall(borrow_item.amount))}</td>
+                                                                <td className='escpecil'>
+                                                                    {
+                                                                        borrow_item.symbol === this.state.i_want_send && this.state.max_liquidate_amount ?
+                                                                            format_num_K(format_Shortfall(this.state.max_liquidate_amount_show)) : ''
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div className='liquidate'>
+                                        <div className='liquidate-title'>
+                                            <span><FormattedMessage id='RequestedAmountClose' /></span>
+                                            <span style={{ color: '#8472FF' }}>
+                                                {
+                                                    this.state.i_want_send ?
+                                                        ' (' + this.state.i_want_send + ')' : ''
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className='liquidate-con'>
+                                            <div className='input-wrap'>
+                                                <Input
+                                                    placeholder='number'
+                                                    type='number'
+                                                    onChange={(e) => { input_chang(this, e.target.value) }}
+                                                    value={this.state.amount_to_liquidate}
+                                                />
+                                                <span className='max-tips' onClick={() => { click_max(this) }}>MAX</span>
+                                            </div>
+                                            <div className='button-wrap'>
+                                                <Button
+                                                    loading={this.state.loading}
+                                                    onClick={() => { click_liquidate(this) }}
+                                                    className={
+                                                        !this.state.is_btn_enable ||
+                                                            this.state.liquidator_btn_disabled ||
+                                                            this.state.data[this.state.index].address === this.state.my_account ?
+                                                            'disable-button' : null
+                                                    }
+                                                    disabled={
+                                                        this.state.liquidator_btn_disabled || this.state.data[this.state.index].address === this.state.my_account ?
+                                                            true : false
+                                                    }
+                                                >
+                                                    {
+                                                        this.state.loading ?
+                                                            <FormattedMessage id='SUBMITTING' /> : <FormattedMessage id='LIQUIDATE' />
+                                                    }
+                                                </Button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
+
                         </div>
                         <div className='clear'></div>
                     </div>
