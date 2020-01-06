@@ -653,6 +653,7 @@ export const get_history = (that) => {
                 // console.log(arrList);
 
                 that.setState({
+                    data_is_ok: true,
                     history: history,
                     totalSize_history: data.request.totalSize,
                     pageNumber_history: data.request.pageNumber,

@@ -285,6 +285,105 @@ export default class homeNoweb3 extends React.Component {
                                     </tbody>
                                 </table>
                             </div>
+
+                            {
+                                !this.state.show_history &&
+                                <div className='main-body-details'>
+                                    <div className='account'>
+                                        <span className='account-title'><FormattedMessage id='Account' />:</span>
+                                        <span className='account-address' onClick={() => { to_ethscan_with_account(this, this.state.data[this.state.index].address) }}>
+                                            {this.state.data[this.state.index].address}
+                                        </span>
+                                    </div>
+                                    <div className='supply-table'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='Supply' /></th>
+                                                    <th><FormattedMessage id='Amount' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.state.data[this.state.index].supply &&
+                                                    this.state.data[this.state.index].supply.map(supply_item => {
+                                                        return (
+                                                            <tr
+                                                                key={supply_item.asset}
+                                                                onClick={() => { i_want_received_token(this, supply_item) }}
+                                                                className={supply_item.symbol === this.state.i_want_received ? 'active' : ''}
+                                                            >
+                                                                <td>{supply_item.symbol}</td>
+                                                                <td>{format_num_K(format_Shortfall(supply_item.amount))}</td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div className='borrow-table'>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th><FormattedMessage id='Borrow' /></th>
+                                                    <th><FormattedMessage id='Amount' /></th>
+                                                    <th className='escpecil'><FormattedMessage id='MAX_Liquidation' /></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    this.state.data[this.state.index].borrow &&
+                                                    this.state.data[this.state.index].borrow.map(borrow_item => {
+                                                        return (
+                                                            <tr
+                                                                key={borrow_item.asset}
+                                                                onClick={() => { i_want_send_token(this, borrow_item) }}
+                                                                className={borrow_item.symbol === this.state.i_want_send ? 'active' : ''}
+                                                            >
+                                                                <td>{borrow_item.symbol}</td>
+                                                                <td>{format_num_K(format_Shortfall(borrow_item.amount))}</td>
+                                                                <td className='escpecil'>
+                                                                    {
+                                                                        borrow_item.symbol === this.state.i_want_send && this.state.max_liquidate_amount ?
+                                                                            format_num_K(format_Shortfall(this.state.max_liquidate_amount_show)) : ''
+                                                                    }
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div className='liquidate'>
+                                        <div className='liquidate-title'>
+                                            <span><FormattedMessage id='RequestedAmountClose' /></span>
+                                            <span style={{ color: '#8472FF' }}>
+                                                {
+                                                    this.state.i_want_send ?
+                                                        ' (' + this.state.i_want_send + ')' : ''
+                                                }
+                                            </span>
+                                        </div>
+                                        <div className='liquidate-con'>
+                                            <div className='input-wrap'>
+                                                <Input disabled={true} />
+                                                <span className='max-tips'>MAX</span>
+                                            </div>
+                                            <div className='button-wrap'>
+                                                <Button disabled={true} className={'disable-button'}>
+                                                    <FormattedMessage id='LIQUIDATE' />
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
                         </div>
                         <div className='clear'></div>
                     </div>
