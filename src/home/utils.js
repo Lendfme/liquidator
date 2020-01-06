@@ -636,6 +636,8 @@ export const get_history = (that) => {
     // https://api.lendf.me/v1/info?data=liquidateBorrow     &pageNumber=1&pageSize=15
     var history_api = url_map['main']['history_url'] + '&pageNumber=1&pageSize=15';
     // console.log(history_api);
+    console.log(history_api);
+
 
     fetch(history_api)
         .then((res) => { return res.text() })
