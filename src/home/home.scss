@@ -165,11 +165,16 @@
         font-weight: bold;
         color: rgba(53, 51, 62, 1);
         margin-bottom: 15px;
+        position: relative;
 
         img {
             width: 20px;
-            margin-top: -4px;
-            margin-right: 5px;
+            position: absolute;
+            top: -2px;
+        }
+
+        span {
+            margin-left: 26px;
         }
     }
 
