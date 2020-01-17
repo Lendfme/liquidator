@@ -2,8 +2,7 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import './home.scss';
 import Web3 from 'web3';
-import { Button, Input } from 'antd';
-import { Pagination } from 'antd';
+import { Button, Input, Pagination } from 'antd';
 
 // add i18n.
 import { IntlProvider, FormattedMessage } from 'react-intl';
@@ -70,16 +69,6 @@ export default class Home extends React.Component {
                 }
             ],
             index: 0,
-            decimals: {
-                USDx: 18,
-                WETH: 18,
-                USDT: 6
-            },
-            max_liquidate: {
-                USDx: {},
-                WETH: {},
-                USDT: {}
-            },
             amount_to_liquidate: '',
             data_is_ok: false,
             is_btn_enable: true,
@@ -98,6 +87,7 @@ export default class Home extends React.Component {
                 let USDx = new this.new_web3.eth.Contract(USDx_abi, address[net_type]['USDx']);
                 let USDT = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['USDT']);
                 let imBTC = new this.new_web3.eth.Contract(imBTC_ABI, address[net_type]['imBTC']);
+                let HBTC = new this.new_web3.eth.Contract(imBTC_ABI, address[net_type]['HBTC']);
                 let Liquidate = new this.new_web3.eth.Contract(Liquidate_ABI, address[net_type]['liquidator']);
 
                 this.new_web3.givenProvider.enable().then(res_accounts => {
@@ -108,6 +98,7 @@ export default class Home extends React.Component {
                         USDx: USDx,
                         USDT: USDT,
                         imBTC: imBTC,
+                        HBTC: HBTC,
                         Liquidate: Liquidate,
                         my_account: res_accounts[0],
                         i_am_ready: true
@@ -116,14 +107,6 @@ export default class Home extends React.Component {
                         get_list_data(this, 1);
                         get_balance(this);
                         get_history(this);
-
-                        this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
-                            console.log('res_usdx_price:', res_usdx_price);
-                            this.setState({ usdx_price: res_usdx_price }, () => {
-                                // get_list_data(this, 1);
-                                // get_balance(this);
-                            })
-                        })
                     })
                 })
             }
@@ -162,6 +145,14 @@ export default class Home extends React.Component {
 
 
 
+    clickFAQ = () => {
+        // console.log('aaaaa');
+        if (this.state.cur_language === '中文') {
+            window.open('https://docs.lendf.me/faqcn', '_blank');
+        } else {
+            window.open('https://docs.lendf.me/faq', '_blank');
+        }
+    }
 
 
 
@@ -171,12 +162,11 @@ export default class Home extends React.Component {
                 get_balance(this);
                 get_allowance(this, address[this.state.net_type]['liquidator']);
 
-                this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
-                    console.log('res_usdx_price:', res_usdx_price);
-                    this.setState({ usdx_price: res_usdx_price }, () => {
-                        get_list_data(this, 1);
-                    })
-                })
+                // this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
+                //     this.setState({ usdx_price: res_usdx_price }, () => {
+                //         get_list_data(this, 1);
+                //     })
+                // })
             })
         })
     }
@@ -423,6 +413,22 @@ export default class Home extends React.Component {
                                                 }
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td className='td-1'>
+                                                {'HBTC'}
+                                                {
+                                                    !this.state.hbtc_approved &&
+                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.HBTC, address[this.state.net_type]['liquidator'], 'hbtc') }} />
+                                                }
+                                            </td>
+                                            <td className='td-2'>
+                                                {
+                                                    this.state.my_hbtc_balance ?
+                                                        format_num_K(format_bn(this.state.my_hbtc_balance, 18, 2)) : '0'
+                                                }
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -561,7 +567,7 @@ export default class Home extends React.Component {
                                     <a href='https://github.com/Lendfme/liquidator' target='_blank' rel="noopener noreferrer">GitHub</a>
                                 </span>
                                 <span className='content'>
-                                    <a href='https://docs.lendf.me/faq' target='_blank' rel="noopener noreferrer">FAQ</a>
+                                    <a onClick={() => { this.clickFAQ() }}>FAQ</a>
                                 </span>
                             </div>
 

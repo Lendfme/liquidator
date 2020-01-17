@@ -21,6 +21,10 @@ export const get_balance = (that) => {
     that.new_web3.eth.getBalance(that.state.my_account, (err, res_eth_balance) => {
         that.setState({ my_eth_balance: res_eth_balance });
     });
+
+    that.state.HBTC.methods.balanceOf(that.state.my_account).call((err, res_hbtc_balance) => {
+        that.setState({ my_hbtc_balance: res_hbtc_balance });
+    })
 }
 
 
@@ -54,6 +58,14 @@ export const get_allowance = (that, address_liquidator) => {
             that.setState({ imbtc_approved: true });
         } else {
             that.setState({ imbtc_approved: false });
+        }
+    });
+
+    that.state.HBTC.methods.allowance(that.state.my_account, address_liquidator).call((err, res_hbtc_allowance) => {
+        if (that.bn(res_hbtc_allowance).gt(that.bn('0'))) {
+            that.setState({ hbtc_approved: true });
+        } else {
+            that.setState({ hbtc_approved: false });
         }
     });
 }
@@ -164,6 +176,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                                 that.setState({ usdt_approved: true })
                                             } else if (token === 'imbtc') {
                                                 that.setState({ imbtc_approved: true })
+                                            } else if (token === 'hbtc') {
+                                                that.setState({ hbtc_approved: true })
                                             }
                                         }
                                     }
@@ -178,6 +192,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                             that.setState({ usdt_approved: false })
                                         } else if (token === 'imbtc') {
                                             that.setState({ imbtc_approved: false })
+                                        } else if (token === 'hbtc') {
+                                            that.setState({ hbtc_approved: false })
                                         }
                                     }
                                 })
