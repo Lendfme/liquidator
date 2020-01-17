@@ -327,8 +327,6 @@ export const click_liquidate = (that) => {
         return false;
     }
 
-    that.setState({ loading: true });
-
     var tar_address = that.state.data[that.state.index].address; // 要清算的目标账户
     var tar_amount_to_liquidate = that.state.amount_to_liquidate; // 请求清算的数量
     var tar_borrow = that.state.i_want_send_address;
@@ -358,6 +356,8 @@ export const click_liquidate = (that) => {
         console.log('tar_address is you. you can not Liquidate yourself.');
         return false;
     }
+
+    that.setState({ loading: true });
 
     that.state.Liquidate.methods.liquidateBorrow(tar_address, tar_borrow, tar_supply, last_argus).estimateGas(
         { from: that.state.my_account }, (err, gasLimit) => {
