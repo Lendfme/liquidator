@@ -98,7 +98,9 @@ export default class homeNoweb3 extends React.Component {
                 <React.Fragment>
                     <div className='top'>
                         <div className='top-left'>
-                            <img src={logo} alt='' />
+                            <a href='https://www.lendf.me/' target='_blank' rel="noopener noreferrer">
+                                <img src={logo} alt='' />
+                            </a>
                         </div>
                         <div className='top-right'>
                             {
