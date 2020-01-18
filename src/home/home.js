@@ -106,7 +106,6 @@ export default class Home extends React.Component {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
                         get_balance(this);
-                        get_history(this);
                     })
                 })
             }
@@ -138,8 +137,6 @@ export default class Home extends React.Component {
                 get_main_data_timer(this);
                 get_balance(this);
             }
-
-            get_history(this);
         }, 1000 * 15)
     }
 
@@ -155,18 +152,26 @@ export default class Home extends React.Component {
     }
 
 
+    contrl_show_history = () => {
+        this.setState({ show_history: !this.state.show_history }, () => {
+            if (this.state.show_history) {
+                get_history(this);
+                this.history_timer = setInterval(() => {
+                    get_history(this);
+                }, 1000 * 15)
+            } else {
+                clearInterval(this.history_timer);
+            }
+        })
+    }
+
+
 
     click_connect = () => {
         this.new_web3.givenProvider.enable().then(res_accounts => {
             this.setState({ my_account: res_accounts[0] }, () => {
                 get_balance(this);
                 get_allowance(this, address[this.state.net_type]['liquidator']);
-
-                // this.state.mMarket.methods.assetPrices(address[this.state.net_type]['USDx']).call().then(res_usdx_price => {
-                //     this.setState({ usdx_price: res_usdx_price }, () => {
-                //         get_list_data(this, 1);
-                //     })
-                // })
             })
         })
     }
@@ -220,7 +225,7 @@ export default class Home extends React.Component {
 
 
                     <div className='main-body'>
-                        <h3 onClick={() => { this.setState({ show_history: !this.state.show_history }) }} className='h3-switch'>
+                        <h3 onClick={() => { this.contrl_show_history() }} className='h3-switch'>
                             <img src={back} />
                             <span>
                                 {
