@@ -1,6 +1,6 @@
 Attribution and Copy Rights
 
-Lendf.Me is a project started off by the community, with grant from dForce Foundation, initial efforts attributed to the following community developers: Peiwen Liu, Siyu Li and Fei Yang. 
+Lendf.Me is a project started off by the community, with grant from dForce Foundation. 
 
 Lendf.Me comprises of the following modules: Money Market Contract (based on Compound V1), Interest rate models, oracle, liquidator, liquidation monitor, market dashboard and front-end UI&UE. 
 
