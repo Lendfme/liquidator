@@ -73,7 +73,7 @@ export const get_allowance = (that, address_liquidator) => {
 
 export const get_list_data = (that, num) => {
     that.setState({ data_is_ok: false });
-    let list_api = url_map['main']['account_list_url'] + '?pageNumber=1&pageSize=15';
+    let list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=1&pageSize=15';
 
     fetch(list_api)
         .then((res) => { return res.text() })
@@ -131,7 +131,7 @@ export const handle_list_click = (that, key) => {
         var assetBorrow = that.state.data[key].borrow[0].asset;
         var assetCollateral = that.state.data[key].supply[0].asset;
 
-        var get_max_api = url_map['main']['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
@@ -444,7 +444,7 @@ export const i_want_received_token = (that, item) => {
         var targetAccount = that.state.data[that.state.index].address;
         var assetBorrow = that.state.i_want_send_address;
         var assetCollateral = that.state.i_want_received_address;
-        var get_max_api = url_map['main']['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
@@ -473,7 +473,7 @@ export const i_want_send_token = (that, item) => {
         var targetAccount = that.state.data[that.state.index].address;
         var assetBorrow = that.state.i_want_send_address;
         var assetCollateral = that.state.i_want_received_address;
-        var get_max_api = url_map['main']['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
+        var get_max_api = url_map[that.state.net_type]['liquidate_url'] + '?targetAccount=' + targetAccount + '&assetBorrow=' + assetBorrow + '&assetCollateral=' + assetCollateral;
 
         // console.log(get_max_api)
         fetch(get_max_api)
@@ -496,7 +496,7 @@ export const change_page = (that, page, pageSize) => {
         page_changeing: true
     });
 
-    var list_api = url_map['main']['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
+    var list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
     console.log('change page: ', list_api);
 
     fetch(list_api)
@@ -536,7 +536,7 @@ export const change_page = (that, page, pageSize) => {
 
 
 export const change_page_history = (that, page, pageSize, key) => {
-    var history_api = url_map['main']['history_url'] + '&pageNumber=' + page + '&pageSize=15';
+    var history_api = url_map[that.state.net_type]['history_url'] + '&pageNumber=' + page + '&pageSize=15';
     console.log('change_page_history: ', history_api);
 
     fetch(history_api)
@@ -567,9 +567,9 @@ export const get_main_data_timer = (that) => {
     var list_api;
     if (Number(that.state.totalPageNumber) === Number(that.state.pageNumber) && (that.state.totalSize % that.state.pageNumber !== 0)) {
         var last_num = that.state.totalSize % that.state.pageNumber;
-        list_api = url_map['main']['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
     } else {
-        list_api = url_map['main']['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
+        list_api = url_map[that.state.net_type]['account_list_url'] + '?pageNumber=' + that.state.pageNumber + '&pageSize=15';
     }
     // console.log(list_api);
 
@@ -640,7 +640,7 @@ export const get_history = (that) => {
     // }
 
     // https://api.lendf.me/v1/info?data=liquidateBorrow     &pageNumber=1&pageSize=15
-    var history_api = url_map['main']['history_url'] + '&pageNumber=1&pageSize=15';
+    var history_api = url_map[that.state.net_type]['history_url'] + '&pageNumber=1&pageSize=15';
     // console.log(history_api);
     console.log(history_api);
 
