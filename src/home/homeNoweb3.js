@@ -49,6 +49,7 @@ export default class homeNoweb3 extends React.Component {
     constructor(porps) {
         super(porps);
         this.state = {
+            net_type: 'main',
             data: [
                 {
                     key: 0,
