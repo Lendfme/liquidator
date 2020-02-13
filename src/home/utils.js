@@ -490,24 +490,14 @@ export const i_want_send_token = (that, item) => {
 }
 
 
-export const change_page = (that, page, pageSize, key) => {
+export const change_page = (that, page, pageSize) => {
     that.setState({
-        data: [
-            {
-                key: 0,
-                shortfallWeth: '0.00',
-                address: '...',
-                Supply: '0.00',
-                Borrow: '0.00',
-                collateralRate: '0.00%',
-            }
-        ],
         data_is_ok: false,
         page_changeing: true
     });
 
     var list_api = url_map['main']['account_list_url'] + '?pageNumber=' + page + '&pageSize=15';
-    console.log(list_api);
+    console.log('change page: ', list_api);
 
     fetch(list_api)
         .then((res) => { return res.text() })
@@ -536,7 +526,7 @@ export const change_page = (that, page, pageSize, key) => {
                     totalPageNumber: data.request.totalPageNumber,
                     page_changeing: false
                 }, () => {
-                    handle_list_click(that, key || 0);
+                    handle_list_click(that, 0);
                 })
 
                 console.log(data);
@@ -547,7 +537,7 @@ export const change_page = (that, page, pageSize, key) => {
 
 export const change_page_history = (that, page, pageSize, key) => {
     var history_api = url_map['main']['history_url'] + '&pageNumber=' + page + '&pageSize=15';
-    console.log(history_api);
+    console.log('change_page_history: ', history_api);
 
     fetch(history_api)
         .then((res) => { return res.text() })
