@@ -419,7 +419,7 @@ export default class Home extends React.Component {
                                             </td>
                                         </tr>
 
-                                        {/* <tr>
+                                        <tr>
                                             <td className='td-1'>
                                                 {'HBTC'}
                                                 {
@@ -433,7 +433,7 @@ export default class Home extends React.Component {
                                                         format_num_K(format_bn(this.state.my_hbtc_balance, 18, 2)) : '0'
                                                 }
                                             </td>
-                                        </tr> */}
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
