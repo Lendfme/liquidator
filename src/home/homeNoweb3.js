@@ -260,38 +260,63 @@ export default class homeNoweb3 extends React.Component {
                                             <th className='th-2'><FormattedMessage id='Balance' /></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td className='td-1'>{'ETH'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>{'WETH'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>{'USDx'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>{'USDT'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>{'imBTC'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>{'HBTC'}</td>
-                                            <td className='td-2'>...</td>
-                                        </tr>
-                                    </tbody>
                                 </table>
+                                <div className='body-wrap'>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td className='td-1'>{'ETH'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'WETH'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'USDx'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'USDT'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'imBTC'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'HBTC'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'USDC'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'TUSD'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'PAX'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'WBTC'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                             </div>
 
                             {

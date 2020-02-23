@@ -414,6 +414,12 @@
             border-radius: 6px;
             margin-bottom: 20px;
 
+            .body-wrap {
+                height: 216px;
+                // background: red;
+                overflow: auto;
+            }
+
             table {
                 width: 100%;
 

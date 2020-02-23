@@ -90,6 +90,11 @@ export default class Home extends React.Component {
                 let HBTC = new this.new_web3.eth.Contract(imBTC_ABI, address[net_type]['HBTC']);
                 let Liquidate = new this.new_web3.eth.Contract(Liquidate_ABI, address[net_type]['liquidator']);
 
+                let USDC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['USDC']);
+                let PAX = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['PAX']);
+                let TUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['TUSD']);
+                let WBTC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['WBTC']);
+
                 this.new_web3.givenProvider.enable().then(res_accounts => {
                     this.setState({
                         net_type: net_type,
@@ -101,7 +106,11 @@ export default class Home extends React.Component {
                         HBTC: HBTC,
                         Liquidate: Liquidate,
                         my_account: res_accounts[0],
-                        i_am_ready: true
+                        i_am_ready: true,
+                        USDC: USDC,
+                        PAX: PAX,
+                        TUSD: TUSD,
+                        WBTC: WBTC
                     }, () => {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
@@ -344,98 +353,167 @@ export default class Home extends React.Component {
                                             <th className='th-2'><FormattedMessage id='Balance' /></th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td className='td-1'>{'ETH'}</td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_eth_balance ?
-                                                        format_num_K(format_bn(this.state.my_eth_balance, 18, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>
-                                                {'WETH'}
-                                                {
-                                                    !this.state.weth_approved &&
-                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WETH, address[this.state.net_type]['liquidator'], 'weth') }} />
-                                                }
-                                            </td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_weth_balance ?
-                                                        format_num_K(format_bn(this.state.my_weth_balance, 18, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>
-                                                {'USDx'}
-                                                {
-                                                    !this.state.usdx_approved &&
-                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDx, address[this.state.net_type]['liquidator'], 'usdx') }} />
-                                                }
-                                            </td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_usdx_balance ?
-                                                        format_num_K(format_bn(this.state.my_usdx_balance, 18, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>
-                                                {'USDT'}
-                                                {
-                                                    !this.state.usdt_approved &&
-                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDT, address[this.state.net_type]['liquidator'], 'usdt') }} />
-                                                }
-                                            </td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_usdt_balance ?
-                                                        format_num_K(format_bn(this.state.my_usdt_balance, 6, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>
-                                                {'imBTC'}
-                                                {
-                                                    !this.state.imbtc_approved &&
-                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.imBTC, address[this.state.net_type]['liquidator'], 'imbtc') }} />
-                                                }
-                                            </td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_imbtc_balance ?
-                                                        format_num_K(format_bn(this.state.my_imbtc_balance, 8, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-
-                                        <tr>
-                                            <td className='td-1'>
-                                                {'HBTC'}
-                                                {
-                                                    !this.state.hbtc_approved &&
-                                                    <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.HBTC, address[this.state.net_type]['liquidator'], 'hbtc') }} />
-                                                }
-                                            </td>
-                                            <td className='td-2'>
-                                                {
-                                                    this.state.my_hbtc_balance ?
-                                                        format_num_K(format_bn(this.state.my_hbtc_balance, 18, 2)) : '0'
-                                                }
-                                            </td>
-                                        </tr>
-                                    </tbody>
                                 </table>
+                                <div className='body-wrap'>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td className='td-1'>{'ETH'}</td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_eth_balance ?
+                                                            format_num_K(format_bn(this.state.my_eth_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'WETH'}
+                                                    {
+                                                        !this.state.weth_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WETH, address[this.state.net_type]['liquidator'], 'weth') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_weth_balance ?
+                                                            format_num_K(format_bn(this.state.my_weth_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'USDx'}
+                                                    {
+                                                        !this.state.usdx_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDx, address[this.state.net_type]['liquidator'], 'usdx') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_usdx_balance ?
+                                                            format_num_K(format_bn(this.state.my_usdx_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'USDT'}
+                                                    {
+                                                        !this.state.usdt_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDT, address[this.state.net_type]['liquidator'], 'usdt') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_usdt_balance ?
+                                                            format_num_K(format_bn(this.state.my_usdt_balance, 6, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'imBTC'}
+                                                    {
+                                                        !this.state.imbtc_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.imBTC, address[this.state.net_type]['liquidator'], 'imbtc') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_imbtc_balance ?
+                                                            format_num_K(format_bn(this.state.my_imbtc_balance, 8, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'HBTC'}
+                                                    {
+                                                        !this.state.hbtc_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.HBTC, address[this.state.net_type]['liquidator'], 'hbtc') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_hbtc_balance ?
+                                                            format_num_K(format_bn(this.state.my_hbtc_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'USDC'}
+                                                    {
+                                                        !this.state.usdc_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.USDC, address[this.state.net_type]['liquidator'], 'usdc') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_usdc_balance ?
+                                                            format_num_K(format_bn(this.state.my_usdc_balance, 6, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'TUSD'}
+                                                    {
+                                                        !this.state.tusd_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.TUSD, address[this.state.net_type]['liquidator'], 'tusd') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_tusd_balance ?
+                                                            format_num_K(format_bn(this.state.my_tusd_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'PAX'}
+                                                    {
+                                                        !this.state.pax_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.PAX, address[this.state.net_type]['liquidator'], 'pax') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_pax_balance ?
+                                                            format_num_K(format_bn(this.state.my_pax_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'WBTC'}
+                                                    {
+                                                        !this.state.wbtc_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.WBTC, address[this.state.net_type]['liquidator'], 'wbtc') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_wbtc_balance ?
+                                                            format_num_K(format_bn(this.state.my_wbtc_balance, 8, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
                             {

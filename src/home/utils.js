@@ -25,6 +25,22 @@ export const get_balance = (that) => {
     that.state.HBTC.methods.balanceOf(that.state.my_account).call((err, res_hbtc_balance) => {
         that.setState({ my_hbtc_balance: res_hbtc_balance });
     })
+
+    that.state.USDC.methods.balanceOf(that.state.my_account).call((err, res_usdc_balance) => {
+        that.setState({ my_usdc_balance: res_usdc_balance });
+    })
+
+    that.state.PAX.methods.balanceOf(that.state.my_account).call((err, res_pax_balance) => {
+        that.setState({ my_pax_balance: res_pax_balance });
+    })
+
+    that.state.TUSD.methods.balanceOf(that.state.my_account).call((err, res_tusd_balance) => {
+        that.setState({ my_tusd_balance: res_tusd_balance });
+    })
+
+    that.state.WBTC.methods.balanceOf(that.state.my_account).call((err, res_wbtc_balance) => {
+        that.setState({ my_wbtc_balance: res_wbtc_balance });
+    })
 }
 
 
@@ -66,6 +82,38 @@ export const get_allowance = (that, address_liquidator) => {
             that.setState({ hbtc_approved: true });
         } else {
             that.setState({ hbtc_approved: false });
+        }
+    });
+
+    that.state.USDC.methods.allowance(that.state.my_account, address_liquidator).call((err, res_usdc_allowance) => {
+        if (that.bn(res_usdc_allowance).gt(that.bn('0'))) {
+            that.setState({ usdc_approved: true });
+        } else {
+            that.setState({ usdc_approved: false });
+        }
+    });
+
+    that.state.PAX.methods.allowance(that.state.my_account, address_liquidator).call((err, res_pax_allowance) => {
+        if (that.bn(res_pax_allowance).gt(that.bn('0'))) {
+            that.setState({ pax_approved: true });
+        } else {
+            that.setState({ pax_approved: false });
+        }
+    });
+
+    that.state.TUSD.methods.allowance(that.state.my_account, address_liquidator).call((err, res_tusd_allowance) => {
+        if (that.bn(res_tusd_allowance).gt(that.bn('0'))) {
+            that.setState({ tusd_approved: true });
+        } else {
+            that.setState({ tusd_approved: false });
+        }
+    });
+
+    that.state.WBTC.methods.allowance(that.state.my_account, address_liquidator).call((err, res_wbtc_allowance) => {
+        if (that.bn(res_wbtc_allowance).gt(that.bn('0'))) {
+            that.setState({ wbtc_approved: true });
+        } else {
+            that.setState({ wbtc_approved: false });
         }
     });
 }
@@ -178,6 +226,14 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                                 that.setState({ imbtc_approved: true })
                                             } else if (token === 'hbtc') {
                                                 that.setState({ hbtc_approved: true })
+                                            } else if (token === 'usdc') {
+                                                that.setState({ usdc_approved: true })
+                                            } else if (token === 'wbtc') {
+                                                that.setState({ wbtc_approved: true })
+                                            } else if (token === 'tusd') {
+                                                that.setState({ tusd_approved: true })
+                                            } else if (token === 'pax') {
+                                                that.setState({ pax_approved: true })
                                             }
                                         }
                                     }
@@ -194,6 +250,14 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                             that.setState({ imbtc_approved: false })
                                         } else if (token === 'hbtc') {
                                             that.setState({ hbtc_approved: false })
+                                        } else if (token === 'usdc') {
+                                            that.setState({ usdc_approved: false })
+                                        } else if (token === 'wbtc') {
+                                            that.setState({ wbtc_approved: false })
+                                        } else if (token === 'tusd') {
+                                            that.setState({ tusd_approved: false })
+                                        } else if (token === 'pax') {
+                                            that.setState({ pax_approved: false })
                                         }
                                     }
                                 })
