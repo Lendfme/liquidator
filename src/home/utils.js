@@ -41,6 +41,10 @@ export const get_balance = (that) => {
     that.state.WBTC.methods.balanceOf(that.state.my_account).call((err, res_wbtc_balance) => {
         that.setState({ my_wbtc_balance: res_wbtc_balance });
     })
+
+    that.state.DSR.methods.balanceOf(that.state.my_account).call((err, res_wbtc_balance) => {
+        that.setState({ my_dsr_balance: res_wbtc_balance });
+    })
 }
 
 
@@ -114,6 +118,14 @@ export const get_allowance = (that, address_liquidator) => {
             that.setState({ wbtc_approved: true });
         } else {
             that.setState({ wbtc_approved: false });
+        }
+    });
+
+    that.state.DSR.methods.allowance(that.state.my_account, address_liquidator).call((err, res_wbtc_allowance) => {
+        if (that.bn(res_wbtc_allowance).gt(that.bn('0'))) {
+            that.setState({ dsr_approved: true });
+        } else {
+            that.setState({ dsr_approved: false });
         }
     });
 }
@@ -234,6 +246,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                                 that.setState({ tusd_approved: true })
                                             } else if (token === 'pax') {
                                                 that.setState({ pax_approved: true })
+                                            } else if (token === 'dsr') {
+                                                that.setState({ dsr_approved: true })
                                             }
                                         }
                                     }
@@ -258,6 +272,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                             that.setState({ tusd_approved: false })
                                         } else if (token === 'pax') {
                                             that.setState({ pax_approved: false })
+                                        } else if (token === 'dsr') {
+                                            that.setState({ dsr_approved: false })
                                         }
                                     }
                                 })

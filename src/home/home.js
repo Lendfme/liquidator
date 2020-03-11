@@ -48,6 +48,7 @@ let USDx_abi = require('../ABIs/USDX_ABI.json');
 let USDT_abi = require('../ABIs/USDT_ABI.json');
 let Liquidate_ABI = require('../ABIs/Liquidate_ABI.json');
 let imBTC_ABI = require('../ABIs/imBTC_ABI.json');
+let DSR_ABI = require('../ABIs/dsr.json');
 
 let address = require('../ABIs/address_map.json');
 
@@ -94,6 +95,7 @@ export default class Home extends React.Component {
                 let PAX = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['PAX']);
                 let TUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['TUSD']);
                 let WBTC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['WBTC']);
+                let DSR = new this.new_web3.eth.Contract(DSR_ABI, address[net_type]['DSR']);
 
                 this.new_web3.givenProvider.enable().then(res_accounts => {
                     this.setState({
@@ -110,7 +112,8 @@ export default class Home extends React.Component {
                         USDC: USDC,
                         PAX: PAX,
                         TUSD: TUSD,
-                        WBTC: WBTC
+                        WBTC: WBTC,
+                        DSR: DSR
                     }, () => {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
@@ -507,6 +510,22 @@ export default class Home extends React.Component {
                                                     {
                                                         this.state.my_wbtc_balance ?
                                                             format_num_K(format_bn(this.state.my_wbtc_balance, 8, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'DSR'}
+                                                    {
+                                                        !this.state.dsr_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.DSR, address[this.state.net_type]['liquidator'], 'dsr') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_dsr_balance ?
+                                                            format_num_K(format_bn(this.state.my_dsr_balance, 18, 2)) : '0'
                                                     }
                                                 </td>
                                             </tr>
