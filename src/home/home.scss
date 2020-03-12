@@ -467,12 +467,19 @@
                                 padding-left: 15px;
                                 position: relative;
 
+                                a.chai{
+                                    text-decoration: underline;
+                                }
+
                                 img {
                                     width: 16px;
                                     position: absolute;
                                     top: 9px;
                                     left: 57px;
                                     cursor: pointer;
+                                }
+                                img.chai {
+                                    left: 80px;
                                 }
                             }
 

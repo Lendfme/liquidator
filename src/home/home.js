@@ -517,9 +517,10 @@ export default class Home extends React.Component {
                                             <tr>
                                                 <td className='td-1'>
                                                     {'DSR'}
+                                                    (<a className='chai' href='https://chai.money' target='_blank'>Chai</a>)
                                                     {
                                                         !this.state.dsr_approved &&
-                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.DSR, address[this.state.net_type]['liquidator'], 'dsr') }} />
+                                                        <img className='chai' alt='' src={lock} onClick={() => { handle_approve(this, this.state.DSR, address[this.state.net_type]['liquidator'], 'dsr') }} />
                                                     }
                                                 </td>
                                                 <td className='td-2'>
