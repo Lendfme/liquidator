@@ -96,6 +96,7 @@ export default class Home extends React.Component {
                 let TUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['TUSD']);
                 let WBTC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['WBTC']);
                 let DSR = new this.new_web3.eth.Contract(DSR_ABI, address[net_type]['DSR']);
+                let HUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['HUSD']);
 
                 this.new_web3.givenProvider.enable().then(res_accounts => {
                     this.setState({
@@ -113,7 +114,8 @@ export default class Home extends React.Component {
                         PAX: PAX,
                         TUSD: TUSD,
                         WBTC: WBTC,
-                        DSR: DSR
+                        DSR: DSR,
+                        HUSD: HUSD
                     }, () => {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
@@ -527,6 +529,22 @@ export default class Home extends React.Component {
                                                     {
                                                         this.state.my_dsr_balance ?
                                                             format_num_K(format_bn(this.state.my_dsr_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'HUSD'}
+                                                    {
+                                                        !this.state.husd_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.HUSD, address[this.state.net_type]['liquidator'], 'husd') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_husd_balance ?
+                                                            format_num_K(format_bn(this.state.my_husd_balance, 8, 2)) : '0'
                                                     }
                                                 </td>
                                             </tr>
