@@ -313,6 +313,21 @@ export default class homeNoweb3 extends React.Component {
                                                 <td className='td-1'>{'WBTC'}</td>
                                                 <td className='td-2'>...</td>
                                             </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'DSR'}(<a className='chai' href='https://chai.money' target='_blank'>Chai</a>)</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'HUSD'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className='td-1'>{'BUSD'}</td>
+                                                <td className='td-2'>...</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
