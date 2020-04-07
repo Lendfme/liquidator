@@ -90,13 +90,13 @@ export default class Home extends React.Component {
                 let imBTC = new this.new_web3.eth.Contract(imBTC_ABI, address[net_type]['imBTC']);
                 let HBTC = new this.new_web3.eth.Contract(imBTC_ABI, address[net_type]['HBTC']);
                 let Liquidate = new this.new_web3.eth.Contract(Liquidate_ABI, address[net_type]['liquidator']);
-
                 let USDC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['USDC']);
                 let PAX = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['PAX']);
                 let TUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['TUSD']);
                 let WBTC = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['WBTC']);
                 let DSR = new this.new_web3.eth.Contract(DSR_ABI, address[net_type]['DSR']);
                 let HUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['HUSD']);
+                let BUSD = new this.new_web3.eth.Contract(USDT_abi, address[net_type]['BUSD']);
 
                 this.new_web3.givenProvider.enable().then(res_accounts => {
                     this.setState({
@@ -115,7 +115,8 @@ export default class Home extends React.Component {
                         TUSD: TUSD,
                         WBTC: WBTC,
                         DSR: DSR,
-                        HUSD: HUSD
+                        HUSD: HUSD,
+                        BUSD: BUSD
                     }, () => {
                         get_allowance(this, address[this.state.net_type]['liquidator']);
                         get_list_data(this, 1);
@@ -549,6 +550,21 @@ export default class Home extends React.Component {
                                                 </td>
                                             </tr>
 
+                                            <tr>
+                                                <td className='td-1'>
+                                                    {'BUSD'}
+                                                    {
+                                                        !this.state.busd_approved &&
+                                                        <img alt='' src={lock} onClick={() => { handle_approve(this, this.state.BUSD, address[this.state.net_type]['liquidator'], 'busd') }} />
+                                                    }
+                                                </td>
+                                                <td className='td-2'>
+                                                    {
+                                                        this.state.my_busd_balance ?
+                                                            format_num_K(format_bn(this.state.my_busd_balance, 18, 2)) : '0'
+                                                    }
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

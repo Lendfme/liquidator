@@ -49,6 +49,10 @@ export const get_balance = (that) => {
     that.state.HUSD.methods.balanceOf(that.state.my_account).call((err, res_wbtc_balance) => {
         that.setState({ my_husd_balance: res_wbtc_balance });
     })
+
+    that.state.BUSD.methods.balanceOf(that.state.my_account).call((err, res_wbtc_balance) => {
+        that.setState({ my_busd_balance: res_wbtc_balance });
+    })
 }
 
 
@@ -138,6 +142,14 @@ export const get_allowance = (that, address_liquidator) => {
             that.setState({ husd_approved: true });
         } else {
             that.setState({ husd_approved: false });
+        }
+    });
+
+    that.state.BUSD.methods.allowance(that.state.my_account, address_liquidator).call((err, res_wbtc_allowance) => {
+        if (that.bn(res_wbtc_allowance).gt(that.bn('0'))) {
+            that.setState({ busd_approved: true });
+        } else {
+            that.setState({ busd_approved: false });
         }
     });
 }
@@ -262,6 +274,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                                 that.setState({ dsr_approved: true })
                                             } else if (token === 'husd') {
                                                 that.setState({ husd_approved: true })
+                                            } else if (token === 'busd') {
+                                                that.setState({ busd_approved: true })
                                             }
                                         }
                                     }
@@ -290,6 +304,8 @@ export const handle_approve = (that, token_contract, address_liquidator, token) 
                                             that.setState({ dsr_approved: false })
                                         } else if (token === 'husd') {
                                             that.setState({ husd_approved: false })
+                                        } else if (token === 'busd') {
+                                            that.setState({ busd_approved: false })
                                         }
                                     }
                                 })
